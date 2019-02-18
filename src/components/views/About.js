@@ -6,10 +6,13 @@ class About extends Component {
     render() {
         return (
             <Fragment>
-                <Header title="About" backButton />
+                <Header title="Sobre" backButton />
                 <main>
                     <Typography gutterBottom>
-                        This is an example page
+                        APP em desenvolvimento.
+                    <a href="http://github.com/minas-dev-test/farmacia-frontend-react">
+                    Visitar repositório
+                    </a>
                     </Typography>
                 </main>
             </Fragment>

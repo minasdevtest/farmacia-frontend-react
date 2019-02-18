@@ -7,6 +7,7 @@ import UpdateHandler from './components/UpdateHandler'
 import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 import Home from './components/views/Home';
 import About from './components/views/About';
+import News from './components/views/News';
 
 class App extends Component {
     render() {
@@ -17,6 +18,7 @@ class App extends Component {
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <Route exact path="/about" component={About} />
+                            <Route exact path="/news" component={News} />
                         </Switch>
                     </UpdateHandler>
                 </MuiThemeProvider>

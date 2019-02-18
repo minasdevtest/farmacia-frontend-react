@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "homepage": "http://minas-dev-test.github.io/farmacia-frontend-react",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/minas-dev-test/farmacia-frontend-react"
+  },
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",

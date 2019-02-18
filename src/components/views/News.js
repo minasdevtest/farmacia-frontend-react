@@ -1,0 +1,61 @@
+import React, { Component } from 'react';
+import Header from '../Header';
+import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea } from '@material-ui/core';
+import FarmaSdk from '../../farmaSDK'
+
+class News extends Component {
+    constructor(props) {
+        super(props);
+        this.sdk = FarmaSdk.instance()
+        this.state = {
+            loading: true
+        }
+    }
+
+    fetchNews() {
+        this.setState({ loading: true })
+        this.sdk.news()
+            .then(news => this.setState({ loading: false, news }))
+            .catch(error => console.error(error) || this.setState({ error }))
+            .then(() => this.setState({ loading: false }))
+    }
+
+    componentDidMount() {
+        this.fetchNews()
+    }
+
+    render() {
+        return (
+            <>
+                <Header title="Notícias" backButton />
+                <main>
+                    {this.state.loading ? <CircularProgress /> :
+                        this.state.news.map(article =>
+                            <Card component="article" key={article.id}
+                                style={{ maxWidth: 480, margin: '10px auto' }}>
+                                <CardActionArea>
+                                    {article._embedded['wp:featuredmedia'] &&
+                                        <CardMedia
+                                            style={{ height: 140 }}
+                                            title={article._embedded['wp:featuredmedia'][0].title.rendered}
+                                            image={article._embedded['wp:featuredmedia'][0].source_url} />
+
+                                    }
+                                    <CardContent>
+                                        <Typography gutterBottom variant="h5" component="h2">
+                                            {article.title.rendered}
+                                        </Typography>
+
+                                        <Typography component="div"
+                                            dangerouslySetInnerHTML={{ __html: article.content.rendered }} />
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        )}
+                </main>
+            </>
+        );
+    }
+}
+
+export default News;

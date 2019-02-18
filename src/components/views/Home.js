@@ -7,12 +7,13 @@ class Home extends Component {
     render() {
         return (
             <Fragment>
-                <Header title="React Material-UI Boilerplate" />
+                <Header title="Farmácia solidária" />
                 <main>
                     <Typography gutterBottom>
-                        This is a Boilerplate
+                        Demonstração
                     </Typography>
-                    <Button component={Link} to="about" variant="contained" color="secondary" >Go to about</Button>
+                    <Button component={Link} to="news" variant="contained" color="secondary" >Notícias</Button>
+                    <Button component={Link} to="about" variant="contained" color="secondary" >Sobre</Button>
                 </main>
             </Fragment>
         );
