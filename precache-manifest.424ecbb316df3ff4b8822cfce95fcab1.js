@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "fbefdb53940e4cf7762a",
+    "revision": "7c8c7aefacdc9220cda7",
     "url": "/farmacia-frontend-react/static/css/main.a7b4b4bb.chunk.css"
   },
   {
-    "revision": "fbefdb53940e4cf7762a",
-    "url": "/farmacia-frontend-react/static/js/main.fbefdb53.chunk.js"
+    "revision": "7c8c7aefacdc9220cda7",
+    "url": "/farmacia-frontend-react/static/js/main.7c8c7aef.chunk.js"
   },
   {
     "revision": "85b5ddd2d4ae7366d7c5",
@@ -116,7 +116,7 @@ self.__precacheManifest = [
     "url": "/farmacia-frontend-react/static/media/roboto-latin-900italic.bc833e72.woff"
   },
   {
-    "revision": "31b555d58e6efcea0867f0b8e8797de6",
+    "revision": "46fd97ac018d2ca95a462672c80cbbb3",
     "url": "/farmacia-frontend-react/index.html"
   }
 ];
