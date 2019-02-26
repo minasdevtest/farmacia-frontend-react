@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../Header';
 import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import FarmaSdk from '../../farmaSDK'
 
 class News extends Component {
@@ -15,7 +16,7 @@ class News extends Component {
     fetchNews() {
         this.setState({ loading: true })
         this.sdk.news()
-            .then(news => this.setState({ loading: false, news }))
+            .then(news => this.setState({  news }))
             .catch(error => console.error(error) || this.setState({ error }))
             .then(() => this.setState({ loading: false }))
     }
@@ -33,7 +34,7 @@ class News extends Component {
                         this.state.news.map(article =>
                             <Card component="article" key={article.id}
                                 style={{ maxWidth: 480, margin: '10px auto' }}>
-                                <CardActionArea>
+                                <CardActionArea component={Link} to={`news/${article.id}`}>
                                     {article._embedded['wp:featuredmedia'] &&
                                         <CardMedia
                                             style={{ height: 140 }}
@@ -47,7 +48,7 @@ class News extends Component {
                                         </Typography>
 
                                         <Typography component="div"
-                                            dangerouslySetInnerHTML={{ __html: article.content.rendered }} />
+                                            dangerouslySetInnerHTML={{ __html: article.excerpt.rendered }} />
                                     </CardContent>
                                 </CardActionArea>
                             </Card>

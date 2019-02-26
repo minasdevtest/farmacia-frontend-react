@@ -1,12 +1,24 @@
+const defaultUrl = window.location.hostname === 'localhost' ?
+    'http://localhost:3000' :
+    'http://farmaciasolidaria.ddns.net:3000'
 
 export default class FarmaSdk {
-    constructor({ apiURL = 'http://localhost:3000' } = {}) {
+    constructor({ apiURL = defaultUrl } = {}) {
         this.apiURL = apiURL
         this.rootRoute = '/api/v1'
     }
 
-    news(){
+    news() {
         return this.fetch('/news?_embed')
+    }
+
+    singleNews(id){
+        return this.fetch(`/news/${id}?_embed`)
+    }
+
+    location({field, value}={}){
+        const filter = field? `${field}=${value}` : ''
+        return this.fetch(`/location?${filter}`)
     }
 
     fetch(route) {

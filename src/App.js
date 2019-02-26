@@ -8,6 +8,8 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 import Home from './components/views/Home';
 import About from './components/views/About';
 import News from './components/views/News';
+import NewsSingle from './components/views/NewsSingle';
+import PontosApoio from './components/views/PontosApoio';
 
 class App extends Component {
     render() {
@@ -19,6 +21,9 @@ class App extends Component {
                             <Route exact path="/" component={Home} />
                             <Route exact path="/about" component={About} />
                             <Route exact path="/news" component={News} />
+                            <Route exact path="/news/:id" component={NewsSingle} />
+                            <Route exact path="/news/:id" component={NewsSingle} />
+                            <Route exact path="/place" component={PontosApoio} />
                         </Switch>
                     </UpdateHandler>
                 </MuiThemeProvider>

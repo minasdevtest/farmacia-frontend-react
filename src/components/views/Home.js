@@ -12,8 +12,17 @@ class Home extends Component {
                     <Typography gutterBottom>
                         Demonstração
                     </Typography>
-                    <Button component={Link} to="news" variant="contained" color="secondary" >Notícias</Button>
-                    <Button component={Link} to="about" variant="contained" color="secondary" >Sobre</Button>
+                    <p>
+                        <Button component={Link} to="news" variant="contained" color="secondary" >Notícias</Button>
+                    </p>
+
+                    <p>
+                        <Button component={Link} to="place" variant="contained" color="secondary" >Pontos de Apoio</Button><br />
+                    </p>
+                    <p>
+                        <Button component={Link} to="about" variant="contained" color="secondary" >Sobre</Button><br />
+
+                    </p>
                 </main>
             </Fragment>
         );
