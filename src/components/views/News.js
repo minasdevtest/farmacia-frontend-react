@@ -9,14 +9,15 @@ class News extends Component {
         super(props);
         this.sdk = FarmaSdk.instance()
         this.state = {
-            loading: true
+            loading: true,
+            news: []
         }
     }
 
     fetchNews() {
         this.setState({ loading: true })
         this.sdk.news()
-            .then(news => this.setState({  news }))
+            .then(news => this.setState({ news }))
             .catch(error => console.error(error) || this.setState({ error }))
             .then(() => this.setState({ loading: false }))
     }

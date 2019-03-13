@@ -23,14 +23,14 @@ class Header extends Component {
     goBack = () => window.history.back()
 
     render() {
-        const { children, classes, title, backButton = false, rightAction, appBarProps, ...props } = this.props
+        const { children, classes, title, backButton = false, onBack, rightAction, appBarProps, ...props } = this.props
 
         return (
             <AppBar position="sticky" {...appBarProps} {...props}>
                 <Toolbar>
                     <div className={classes.menuButtonWrapper}>
-                        {backButton &&
-                            <IconButton color="inherit" aria-label="Menu" onClick={this.goBack}>
+                        {(onBack || backButton) &&
+                            <IconButton color="inherit" aria-label="Menu" onClick={onBack || this.goBack}>
                                 <ArrowBackIcon />
                             </IconButton>}
                     </div>

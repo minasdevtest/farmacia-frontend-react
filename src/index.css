@@ -10,3 +10,11 @@ iframe, object, image, video {
   max-width: 100%;
   /* height: auto; */
 }
+
+/* WordPress */
+.wp-block-columns {
+  display: flex;
+}
+.wp-block-columns > * {
+  flex: 1;
+}
