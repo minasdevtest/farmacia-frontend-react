@@ -1,39 +1,51 @@
 self.__precacheManifest = [
   {
-    "revision": "22a374e4d55391990aaf",
-    "url": "/farmacia-frontend-react/static/css/main.0e28e88c.chunk.css"
+    "revision": "42982eb68469b761f485",
+    "url": "/farmacia-frontend-react/static/css/main.6f415a60.chunk.css"
   },
   {
-    "revision": "22a374e4d55391990aaf",
-    "url": "/farmacia-frontend-react/static/js/main.22a374e4.chunk.js"
+    "revision": "42982eb68469b761f485",
+    "url": "/farmacia-frontend-react/static/js/main.42982eb6.chunk.js"
   },
   {
-    "revision": "85b5ddd2d4ae7366d7c5",
-    "url": "/farmacia-frontend-react/static/js/runtime~main.85b5ddd2.js"
+    "revision": "b3ebb60628b87bb32fb0",
+    "url": "/farmacia-frontend-react/static/js/runtime~main.b3ebb606.js"
   },
   {
-    "revision": "b9c600ee1d379fdd0a90",
+    "revision": "5203d4092ebc728fbb7e",
     "url": "/farmacia-frontend-react/static/css/2.c1017241.chunk.css"
   },
   {
-    "revision": "b9c600ee1d379fdd0a90",
-    "url": "/farmacia-frontend-react/static/js/2.b9c600ee.chunk.js"
+    "revision": "5203d4092ebc728fbb7e",
+    "url": "/farmacia-frontend-react/static/js/2.5203d409.chunk.js"
+  },
+  {
+    "revision": "987b84570ea69ee660455b8d5e91f5f1",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-100.987b8457.woff2"
+  },
+  {
+    "revision": "55536c8e9e9a532651e3cf374f290ea3",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-300.55536c8e.woff2"
   },
   {
     "revision": "5d4aeb4e5f5ef754e307d7ffaef688bd",
     "url": "/farmacia-frontend-react/static/media/roboto-latin-400.5d4aeb4e.woff2"
   },
   {
-    "revision": "037d830416495def72b7881024c14b7b",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-700.037d8304.woff2"
-  },
-  {
     "revision": "285467176f7fe6bb6a9c6873b3dad2cc",
     "url": "/farmacia-frontend-react/static/media/roboto-latin-500.28546717.woff2"
   },
   {
+    "revision": "037d830416495def72b7881024c14b7b",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-700.037d8304.woff2"
+  },
+  {
     "revision": "19b7a0adfdd4f808b53af7e2ce2ad4e5",
     "url": "/farmacia-frontend-react/static/media/roboto-latin-900.19b7a0ad.woff2"
+  },
+  {
+    "revision": "d704bb3d579b7d5e40880c75705c8a71",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-100italic.d704bb3d.woff"
   },
   {
     "revision": "e9dbbe8a693dd275c16d32feb101f1c1",
@@ -44,16 +56,16 @@ self.__precacheManifest = [
     "url": "/farmacia-frontend-react/static/media/roboto-latin-100italic.6232f43d.woff2"
   },
   {
-    "revision": "d704bb3d579b7d5e40880c75705c8a71",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-100italic.d704bb3d.woff"
+    "revision": "210a7c781f5a354a0e4985656ab456d9",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-300italic.210a7c78.woff"
   },
   {
     "revision": "a1471d1d6431c893582a5f6a250db3f9",
     "url": "/farmacia-frontend-react/static/media/roboto-latin-300.a1471d1d.woff"
   },
   {
-    "revision": "210a7c781f5a354a0e4985656ab456d9",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-300italic.210a7c78.woff"
+    "revision": "d69924b98acd849cdeba9fbff3f88ea6",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-300italic.d69924b9.woff2"
   },
   {
     "revision": "bafb105baeb22d965c70fe52ba6b49d9",
@@ -104,19 +116,7 @@ self.__precacheManifest = [
     "url": "/farmacia-frontend-react/static/media/roboto-latin-900italic.bc833e72.woff"
   },
   {
-    "revision": "987b84570ea69ee660455b8d5e91f5f1",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-100.987b8457.woff2"
-  },
-  {
-    "revision": "55536c8e9e9a532651e3cf374f290ea3",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-300.55536c8e.woff2"
-  },
-  {
-    "revision": "d69924b98acd849cdeba9fbff3f88ea6",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-300italic.d69924b9.woff2"
-  },
-  {
-    "revision": "8e47220275d4f5e0defe90ba322f8618",
+    "revision": "1b7cc82b0dea9f21ea63bf4bf44e6d46",
     "url": "/farmacia-frontend-react/index.html"
   }
 ];
