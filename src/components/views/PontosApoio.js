@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea, CardActions, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton } from '@material-ui/core';
+import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea, CardActions, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import FarmaSdk from '../../farmaSDK'
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
@@ -142,7 +142,12 @@ class PontosApoio extends Component {
                         style={{ position: 'sticky', bottom: 16, right: 16, float: 'right', margin: 16 }}>
                         <AddIcon />
                     </Fab>
-                    <Dialog fullScreen open={newItemOpen} onClose={this.dialogToggle}>
+                    <Dialog
+                        fullScreen
+                        open={newItemOpen}
+                        onClose={this.dialogToggle}
+                        TransitionComponent={Transition}
+                    >
                         <Header title={newItem.id ? `Editar '${newItem.nome}'` : 'Novo Local'}
                             rightAction={
                                 <IconButton color="inherit" disabled={sending} onClick={this.dialogToggle}>
@@ -180,6 +185,10 @@ class PontosApoio extends Component {
             </>
         );
     }
+}
+
+function Transition(props) {
+    return <Slide direction="up" {...props} />
 }
 
 export default PontosApoio;

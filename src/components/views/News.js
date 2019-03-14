@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea } from '@material-ui/core';
+import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import FarmaSdk from '../../farmaSDK'
 
+/**
+ * News Component
+ * TODO: FIX thumb https url
+ *
+ * @class News
+ * @extends {Component}
+ */
 class News extends Component {
     constructor(props) {
         super(props);
@@ -29,7 +36,7 @@ class News extends Component {
     render() {
         return (
             <>
-                <Header title="Notícias" backButton />
+                <Header title="Notícias" backButton rightAction={<Button component="a" color="inherit" target="blank" href="http://18.222.72.102:3000/wp-admin/">Ir para o painel</Button>} />
                 <main>
                     {this.state.loading ? <CircularProgress /> :
                         this.state.news.map(article =>
@@ -40,7 +47,7 @@ class News extends Component {
                                         <CardMedia
                                             style={{ height: 140 }}
                                             title={article._embedded['wp:featuredmedia'][0].title.rendered}
-                                            image={article._embedded['wp:featuredmedia'][0].source_url} />
+                                            image={article._embedded['wp:featuredmedia'][0].source_url.replace('https', 'http')} />
 
                                     }
                                     <CardContent>
