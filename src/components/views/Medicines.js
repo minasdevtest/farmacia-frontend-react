@@ -25,6 +25,7 @@ class MedicinesView extends Component {
             items: [],
             newItem: {},
             newItemOpen: false,
+            editItemId: null,
             sending: false,
             deleting: false,
             statusOptions: [],
@@ -49,6 +50,7 @@ class MedicinesView extends Component {
 
     dialogToggle = () => this.setState({
         newItemOpen: !this.state.newItemOpen,
+        editItemId: null,
         newItem: this.state.newItemOpen ? {} : this.state.newItem
     })
 
@@ -70,8 +72,8 @@ class MedicinesView extends Component {
 
 
         this.setState({ sending: true })
-        this.sdk.saveMedicine(item)
-            .then(items => this.setState({ newItem: {}, sending: false, newItemOpen: false }))
+        this.sdk.saveMedicine(item, this.state.editItemId)
+            .then(items => this.setState({ newItem: {},editItemId: null, sending: false, newItemOpen: false }))
             .then(this.load)
             .catch(error => console.error(error) || this.setState({ error }))
     }
@@ -90,7 +92,7 @@ class MedicinesView extends Component {
     }
 
     render() {
-        const { newItemOpen, newItem, items, loading, sending, typesOptions, statusOptions } = this.state
+        const { newItemOpen, newItem, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
         return (
             <>
                 <Header title="Pontos de Apoio" backButton />
@@ -152,7 +154,8 @@ class MedicinesView extends Component {
                                                             valorEstoque: item.estoque.quantidade,
                                                             status: item.status && item.status.id,
                                                             tipo: item.tipo && item.tipo.id,
-                                                        }, newItemOpen: true
+                                                        }, newItemOpen: true,
+                                                        editItemId: item.lote
                                                     })} color="secondary">
                                                         <EditIcon />
                                                     </IconButton>
@@ -178,7 +181,7 @@ class MedicinesView extends Component {
                         onClose={this.dialogToggle}
                         TransitionComponent={Transition}
                     >
-                        <Header title={newItem.id ? `Editar '${newItem.nome}'` : 'Novo Local'}
+                        <Header title={editItemId ? `Editar` : 'Novo'}
                             rightAction={
                                 <IconButton color="inherit" disabled={sending} onClick={this.dialogToggle}>
                                     <CloseIcon />

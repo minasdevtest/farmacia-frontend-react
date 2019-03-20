@@ -3,7 +3,7 @@ import Axios from "axios";
 const defaultUrl =
     // window.location.hostname === 'localhost' ?
     //     'http://localhost:3000' :
-        'https://farmaciasolidaria-middleware.herokuapp.com'
+    'https://farmaciasolidaria-middleware.herokuapp.com'
 
 
 export default class FarmaSdk {
@@ -42,20 +42,21 @@ export default class FarmaSdk {
         return this.fetch('/medicine').then(({ content }) => content)
     }
 
-    medicineStatus(){
+    medicineStatus() {
         return this.fetch('/medicine/status')
     }
 
-    medicineTypes(){
+    medicineTypes() {
         return this.fetch('/medicine/types')
     }
 
-    saveMedicine(item) {
-        return this.fetch('/medicine', item, { method: 'post' })
+    saveMedicine(item, edit) {
+        alert(edit)
+        return edit ? this.updateMedicine(item, edit) : this.fetch('/medicine', item, { method: 'post' })
     }
 
-    updateMedicine(item) {
-        return this.fetch(`/medicine/${item.lote}`, item, { method: 'put' })
+    updateMedicine(item, id) {
+        return this.fetch(`/medicine/${id}`, item, { method: 'put' })
     }
 
     deleteMedicine(id) {
