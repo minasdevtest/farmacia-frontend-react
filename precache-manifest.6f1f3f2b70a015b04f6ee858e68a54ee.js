@@ -1,23 +1,23 @@
 self.__precacheManifest = [
   {
-    "revision": "905bc6d87ed1836cf5b0",
+    "revision": "58be02124e37d5385be1",
     "url": "/farmacia-frontend-react/static/css/main.6f415a60.chunk.css"
   },
   {
-    "revision": "905bc6d87ed1836cf5b0",
-    "url": "/farmacia-frontend-react/static/js/main.905bc6d8.chunk.js"
+    "revision": "58be02124e37d5385be1",
+    "url": "/farmacia-frontend-react/static/js/main.58be0212.chunk.js"
   },
   {
     "revision": "b3ebb60628b87bb32fb0",
     "url": "/farmacia-frontend-react/static/js/runtime~main.b3ebb606.js"
   },
   {
-    "revision": "6da5a55f6daa3e5b51c3",
+    "revision": "eda9e9350af2d6ee85b5",
     "url": "/farmacia-frontend-react/static/css/2.c1017241.chunk.css"
   },
   {
-    "revision": "6da5a55f6daa3e5b51c3",
-    "url": "/farmacia-frontend-react/static/js/2.6da5a55f.chunk.js"
+    "revision": "eda9e9350af2d6ee85b5",
+    "url": "/farmacia-frontend-react/static/js/2.eda9e935.chunk.js"
   },
   {
     "revision": "987b84570ea69ee660455b8d5e91f5f1",
@@ -48,12 +48,16 @@ self.__precacheManifest = [
     "url": "/farmacia-frontend-react/static/media/roboto-latin-100.e9dbbe8a.woff"
   },
   {
+    "revision": "6232f43d15b0e7a0bf0fe82e295bdd06",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-100italic.6232f43d.woff2"
+  },
+  {
     "revision": "d704bb3d579b7d5e40880c75705c8a71",
     "url": "/farmacia-frontend-react/static/media/roboto-latin-100italic.d704bb3d.woff"
   },
   {
-    "revision": "6232f43d15b0e7a0bf0fe82e295bdd06",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-100italic.6232f43d.woff2"
+    "revision": "a1471d1d6431c893582a5f6a250db3f9",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-300.a1471d1d.woff"
   },
   {
     "revision": "d69924b98acd849cdeba9fbff3f88ea6",
@@ -64,10 +68,6 @@ self.__precacheManifest = [
     "url": "/farmacia-frontend-react/static/media/roboto-latin-300italic.210a7c78.woff"
   },
   {
-    "revision": "a1471d1d6431c893582a5f6a250db3f9",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-300.a1471d1d.woff"
-  },
-  {
     "revision": "bafb105baeb22d965c70fe52ba6b49d9",
     "url": "/farmacia-frontend-react/static/media/roboto-latin-400.bafb105b.woff"
   },
@@ -76,12 +76,12 @@ self.__precacheManifest = [
     "url": "/farmacia-frontend-react/static/media/roboto-latin-400italic.d8bcbe72.woff2"
   },
   {
-    "revision": "de8b7431b74642e830af4d4f4b513ec9",
-    "url": "/farmacia-frontend-react/static/media/roboto-latin-500.de8b7431.woff"
-  },
-  {
     "revision": "9680d5a0c32d2fd084e07bbc4c8b2923",
     "url": "/farmacia-frontend-react/static/media/roboto-latin-400italic.9680d5a0.woff"
+  },
+  {
+    "revision": "de8b7431b74642e830af4d4f4b513ec9",
+    "url": "/farmacia-frontend-react/static/media/roboto-latin-500.de8b7431.woff"
   },
   {
     "revision": "510dec37fa69fba39593e01a469ee018",
@@ -116,7 +116,7 @@ self.__precacheManifest = [
     "url": "/farmacia-frontend-react/static/media/roboto-latin-900italic.bc833e72.woff"
   },
   {
-    "revision": "fa47aa291962ffa6d59efdb315afcf91",
+    "revision": "9656d9961dd61ad4fb3a596d7d804b89",
     "url": "/farmacia-frontend-react/index.html"
   }
 ];
