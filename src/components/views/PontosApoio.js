@@ -123,7 +123,7 @@ class PontosApoio extends Component {
                                                 </TableCell>
 
                                                 <TableCell align="right">
-                                                    <IconButton onClick={() => this.setState({ newItem: item, newItemOpen: true })} color="secondary">
+                                                    <IconButton onClick={() => this.setState({ newItem: {...item}, newItemOpen: true })} color="secondary">
                                                         <EditIcon />
                                                     </IconButton>
                                                     <IconButton disabled={this.state.deleting} onClick={() => this.deleteItem(item.id)}>

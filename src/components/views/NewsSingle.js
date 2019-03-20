@@ -45,7 +45,7 @@ class NewsSingle extends Component {
                                 <CardMedia
                                     style={{ height: 140 }}
                                     title={article._embedded['wp:featuredmedia'][0].title.rendered}
-                                    image={article._embedded['wp:featuredmedia'][0].source_url} />
+                                    image={article._embedded['wp:featuredmedia'][0].source_url.replace('https', 'http')} />
 
                             }
                             <CardContent>

@@ -1,9 +1,10 @@
 import Axios from "axios";
 
-const defaultUrl = 'https://farmaciasolidaria-middleware.herokuapp.com';
-// window.location.hostname === 'localhost' ?
-//     'http://localhost:3000' :
-//     'https://farmaciasolidaria-middleware.herokuapp.comsudo'
+const defaultUrl =
+    // window.location.hostname === 'localhost' ?
+    //     'http://localhost:3000' :
+        'https://farmaciasolidaria-middleware.herokuapp.com'
+
 
 export default class FarmaSdk {
     constructor({ apiURL = defaultUrl } = {}) {
@@ -28,7 +29,7 @@ export default class FarmaSdk {
         return location.id ? this.updateLocation(location) : this.fetch('/location', location, { method: 'post' })
     }
 
-    updateLocation(location){
+    updateLocation(location) {
         return this.fetch(`/location/${location.id}`, location, { method: 'put' })
     }
 
@@ -36,6 +37,34 @@ export default class FarmaSdk {
         return this.fetch(`/location/${id}`, null, { method: 'delete' })
     }
 
+    // Medicamentos
+    medicine() {
+        return this.fetch('/medicine').then(({ content }) => content)
+    }
+
+    medicineStatus(){
+        return this.fetch('/medicine/status')
+    }
+
+    medicineTypes(){
+        return this.fetch('/medicine/types')
+    }
+
+    saveMedicine(item) {
+        return this.fetch('/medicine', item, { method: 'post' })
+    }
+
+    updateMedicine(item) {
+        return this.fetch(`/medicine/${item.lote}`, item, { method: 'put' })
+    }
+
+    deleteMedicine(id) {
+        // TODO: support delete
+        // return this.fetch(`/medicine/${id}`, null, { method: 'delete' })
+        return Promise.resolve()
+    }
+
+    // GERAL
     fetch(route, data, args = {}) {
         return Axios({
             method: 'get',

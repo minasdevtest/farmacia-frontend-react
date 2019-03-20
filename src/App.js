@@ -10,6 +10,7 @@ import About from './components/views/About';
 import News from './components/views/News';
 import NewsSingle from './components/views/NewsSingle';
 import PontosApoio from './components/views/PontosApoio';
+import MedicinesView from './components/views/Medicines';
 
 class App extends Component {
     render() {
@@ -24,6 +25,7 @@ class App extends Component {
                             <Route exact path="/news/:id" component={NewsSingle} />
                             <Route exact path="/news/:id" component={NewsSingle} />
                             <Route exact path="/place" component={PontosApoio} />
+                            <Route exact path="/medicine" component={MedicinesView} />
                         </Switch>
                     </UpdateHandler>
                 </MuiThemeProvider>

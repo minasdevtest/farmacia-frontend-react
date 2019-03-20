@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Header from '../Header';
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button, List, ListItem, ListItemText, Card } from '@material-ui/core';
 import { Link } from 'react-router-dom'
 
 class Home extends Component {
@@ -9,20 +9,31 @@ class Home extends Component {
             <Fragment>
                 <Header title="Farmácia solidária" />
                 <main>
-                    <Typography gutterBottom>
-                        Demonstração
-                    </Typography>
-                    <p>
-                        <Button component={Link} to="news" variant="contained" color="secondary" >Notícias</Button>
-                    </p>
+                    <Card style={{margin: 10}}>
+                        <List component="nav">
 
-                    <p>
-                        <Button component={Link} to="place" variant="contained" color="secondary" >Pontos de Apoio</Button><br />
-                    </p>
-                    <p>
-                        <Button component={Link} to="about" variant="contained" color="secondary" >Sobre</Button><br />
+                            <ListItem button component={Link} to="medicine">
+                                <ListItemText primary="Medicamentos" secondary="Veja medicamentos disponíveis" />
+                            </ListItem>
 
-                    </p>
+                            <ListItem button component={Link} to="place">
+                                <ListItemText
+                                    primary="Pontos de Apoio"
+                                    secondary="Confira os pontos para doação e coleta" />
+                            </ListItem>
+
+                            <ListItem button component={Link} to="news">
+                                <ListItemText primary="Notícias" secondary="Veja as últimas notícias" />
+                            </ListItem>
+
+
+                            <ListItem button component={Link} to="about">
+                                <ListItemText primary="Sobre" secondary="Saiba mais sobre o aplicativo" />
+                            </ListItem>
+
+                        </List>
+                    </Card>
+
                 </main>
             </Fragment>
         );
