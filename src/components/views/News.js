@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Header from '../Header';
 import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import FarmaSdk from '../../farmaSDK'
+import FarmaSdk from '../../lib/farmaSDK'
 
 /**
  * News Component

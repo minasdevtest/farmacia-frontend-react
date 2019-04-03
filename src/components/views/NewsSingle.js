@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea } from '@material-ui/core';
-import FarmaSdk from '../../farmaSDK'
+import { Typography, CircularProgress, Card, CardContent, CardMedia } from '@material-ui/core';
+import FarmaSdk from '../../lib/farmaSDK'
 
 class NewsSingle extends Component {
     constructor(props) {

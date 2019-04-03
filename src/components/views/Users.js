@@ -1,42 +1,41 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide } from '@material-ui/core';
-import FarmaSdk from '../../lib/farmaSDK'
+import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
+import { withSdk } from '../../lib/sdkContext';
 
-const fields = [
-    ['nome', 'Nome do Local', { required: true }],
-    ['rua', 'Rua', { required: true }],
-    ['numero', 'Número', { required: true }],
-    ['complemento', 'Complemento'],
-    ['bairro', 'Bairro', { required: true }],
-    ['cidade', 'Cidade', { required: true }],
-    ['estado', 'Estado', { required: true }],
-    ['cep', 'CEP', { required: true }],
-    ['pnt_referencia', 'Ponto Referencia'],
-    ['hora_Abertura', 'Hora Abertura', { required: true }],
-    ['hora_Fechamento', 'Hora Fechamento', { required: true }],
-    ['latitude', 'Latitude'],
-    ['longitude', 'Longitude'],
-]
+/**
+ *
+ * @class UsersView
+ * @extends {Component}
+ * @property {Strig} sdk
+ */
+class UsersView extends Component {
 
-class PontosApoio extends Component {
     constructor(props) {
+        console.warn(props)
         super(props);
-        this.sdk = FarmaSdk.instance()
         this.state = {
             loading: true,
             items: [],
             newItem: {},
             newItemOpen: false,
+            editItemId: null,
             sending: false,
             deleting: false,
+            statusOptions: [],
+            typesOptions: []
         }
+    }
+
+    get sdk() {
+        console.warn(this.props.sdk)
+        return this.props.sdk
     }
 
     load = () => {
         this.setState({ loading: true })
-        this.sdk.location()
+        this.sdk.getUsers()
             .then(items => this.setState({ items }))
             .catch(error => console.error(error) || this.setState({ error }))
             .then(() => this.setState({ loading: false }))
@@ -48,6 +47,7 @@ class PontosApoio extends Component {
 
     dialogToggle = () => this.setState({
         newItemOpen: !this.state.newItemOpen,
+        editItemId: null,
         newItem: this.state.newItemOpen ? {} : this.state.newItem
     })
 
@@ -55,9 +55,13 @@ class PontosApoio extends Component {
         e && e.preventDefault()
         if (this.state.sending)
             return;
+        const { editItemId } = this.state
+        const item = { ...this.state.newItem }
+
+
         this.setState({ sending: true })
-        this.sdk.saveLocation(this.state.newItem)
-            .then(items => this.setState({ newItem: {}, sending: false, newItemOpen: false }))
+        this.sdk.createUser(item, editItemId)
+            .then(items => this.setState({ newItem: {}, editItemId: null, sending: false, newItemOpen: false }))
             .then(this.load)
             .catch(error => console.error(error) || this.setState({ error }))
     }
@@ -67,19 +71,26 @@ class PontosApoio extends Component {
             return;
         this.setState({ deleting: true })
         const items = [...this.state.items]
-        const index = items.findIndex(({ id: itemId }) => id === itemId)
+        const index = items.findIndex(({ _id: itemId }) => id === itemId)
         items.splice(index, 1)
-        this.sdk.deleteLocation(id)
+        this.sdk.deleteUser(id)
             .then(() => this.setState({ items }))
             .catch(error => console.error(error) || this.setState({ error }))
             .then(() => this.setState({ deleting: false }))
     }
 
     render() {
-        const { newItemOpen, newItem, items, loading, sending, } = this.state
+        const { newItemOpen, newItem, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
+
+        const fields = [
+            ['name', 'Nome', { required: true }],
+            ['email', 'Email', { required: true, type: 'email' }],
+            ['password', 'Senha', { required: true, type: 'password' }],
+        ]
+
         return (
             <>
-                <Header title="Pontos de Apoio" backButton />
+                <Header title="Usuários" backButton />
                 <main>
                     {loading ?
                         <CircularProgress /> :
@@ -89,43 +100,35 @@ class PontosApoio extends Component {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>Nome</TableCell>
-                                            <TableCell align="right">Endereço</TableCell>
-                                            <TableCell align="right">Cidade / UF</TableCell>
-                                            <TableCell align="right">CEP</TableCell>
-                                            <TableCell align="right">Horário</TableCell>
-                                            <TableCell align="right">Ações</TableCell>
+                                            <TableCell padding="dense">Nome</TableCell>
+                                            <TableCell>Email</TableCell>
+                                            <TableCell padding="none">permissões</TableCell>
+                                            <TableCell style={{ width: 100 }}>Ações</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {items.map(item =>
-                                            <TableRow key={item.id}>
+                                            <TableRow key={item._id}>
+                                                <TableCell padding="dense">
+                                                    <small>{item.name}</small>
+                                                </TableCell>
                                                 <TableCell component="th" scope="row">
-                                                    {item.nome}
+                                                    {item.email}<br />
                                                 </TableCell>
 
-                                                <TableCell align="right">
-                                                    <p>{item.rua}, {item.numero} {item.complemento}</p>
-                                                    <p>{item.pnt_referencia}</p>
+                                                <TableCell>
+                                                    {item.roles.join(', ')}
                                                 </TableCell>
 
-                                                <TableCell align="right">
-                                                    {item.cidade}/{item.estado}
-                                                </TableCell>
-
-                                                <TableCell align="right">
-                                                    {item.cep}
-                                                </TableCell>
-
-                                                <TableCell align="right">
-                                                    {item.hora_Abertura} - {item.hora_Fechamento}
-                                                </TableCell>
-
-                                                <TableCell align="right">
-                                                    <IconButton onClick={() => this.setState({ newItem: {...item}, newItemOpen: true })} color="secondary">
+                                                <TableCell>
+                                                    <IconButton onClick={() => this.setState({
+                                                        newItem: { ...item },
+                                                        newItemOpen: true,
+                                                        editItemId: item._id
+                                                    })} color="secondary">
                                                         <EditIcon />
                                                     </IconButton>
-                                                    <IconButton disabled={this.state.deleting} onClick={() => this.deleteItem(item.id)}>
+                                                    <IconButton disabled={this.state.deleting} onClick={() => this.deleteItem(item._id)}>
                                                         <DeleteIcon />
                                                     </IconButton>
                                                 </TableCell>
@@ -147,7 +150,7 @@ class PontosApoio extends Component {
                         onClose={this.dialogToggle}
                         TransitionComponent={Transition}
                     >
-                        <Header title={newItem.id ? `Editar '${newItem.nome}'` : 'Novo Local'}
+                        <Header title={editItemId ? `Editar` : 'Novo'}
                             rightAction={
                                 <IconButton color="inherit" disabled={sending} onClick={this.dialogToggle}>
                                     <CloseIcon />
@@ -156,7 +159,8 @@ class PontosApoio extends Component {
                         <form method="post" onSubmit={this.createItem}>
                             <DialogContent>
                                 <DialogContentText>Preencha os dados abaixo</DialogContentText>
-                                {fields.map(([field, label, args = {}], i) =>
+
+                                {fields.map(([field, label, args = {}, hidden], i) => !hidden &&
                                     <TextField
                                         key={field}
                                         autoFocus={i === 0}
@@ -173,6 +177,28 @@ class PontosApoio extends Component {
                                         }
                                     />
                                 )}
+
+                                <TextField
+                                    margin="dense"
+                                    id="roles"
+                                    name="roles"
+                                    label="Função"
+                                    value={newItem.roles || ''}
+                                    onChange={e => this.setState({ newItem: { ...newItem, roles: e.target.value } })}
+                                    select
+                                    required
+                                    fullWidth>
+                                    <MenuItem value="" disabled>
+                                        Selecione...
+                                    </MenuItem>
+                                    <MenuItem value="user">
+                                        Usuário
+                                    </MenuItem>
+                                    <MenuItem value="admin">
+                                        Administrador
+                                    </MenuItem>
+                                </TextField>
+
                             </DialogContent>
                             <DialogActions>
                                 <Button variant="contained" fullWidth size="large" type="submit" color="primary" disabled={this.sending}>Enviar</Button>
@@ -190,4 +216,4 @@ function Transition(props) {
     return <Slide direction="up" {...props} />
 }
 
-export default PontosApoio;
+export default withSdk(v => v)(UsersView);

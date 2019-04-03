@@ -1,20 +1,8 @@
 import React, { Component } from 'react';
 import Header from '../Header';
 import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem, FormControlLabel, Checkbox } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import FarmaSdk from '../../farmaSDK'
+import FarmaSdk from '../../lib/farmaSDK'
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
-
-const fields = [
-    ['lote', 'Lote', { required: true }],
-    ['principioAtivo', 'Principio Ativo', { required: true }],
-    ['dosagem', 'Dosagem', { required: true }],
-    ['dataVencimento', 'Data de Vencimento', { required: true, type: 'date', InputLabelProps: { shrink: true } }],
-    ['nomeComercial', 'Nome Comercial', { required: true }],
-    ['outrasEspecificacoes', 'Outras especificações', { multiline: true, rowsMax: 4 }],
-    ['laboratorio', 'Laboratório', { required: true }],
-    ['valorEstoque', 'Estoque', { required: true, type: 'number', min: 0, step: 1 }],
-]
 
 class MedicinesView extends Component {
     constructor(props) {
@@ -58,6 +46,7 @@ class MedicinesView extends Component {
         e && e.preventDefault()
         if (this.state.sending)
             return;
+        const { editItemId } = this.state
         const item = { ...this.state.newItem }
         item.status = this.state.statusOptions
             .find(({ id }) => item.status === id)
@@ -70,10 +59,13 @@ class MedicinesView extends Component {
 
         item.usoVeterinario = item.usoVeterinario ? 'S' : 'N'
 
+        if(editItemId){
+            delete item.estoque
+        }
 
         this.setState({ sending: true })
-        this.sdk.saveMedicine(item, this.state.editItemId)
-            .then(items => this.setState({ newItem: {},editItemId: null, sending: false, newItemOpen: false }))
+        this.sdk.saveMedicine(item, editItemId)
+            .then(items => this.setState({ newItem: {}, editItemId: null, sending: false, newItemOpen: false }))
             .then(this.load)
             .catch(error => console.error(error) || this.setState({ error }))
     }
@@ -93,6 +85,18 @@ class MedicinesView extends Component {
 
     render() {
         const { newItemOpen, newItem, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
+
+        const fields = [
+            ['lote', 'Lote', { required: true, disabled: Boolean(editItemId) }],
+            ['principioAtivo', 'Principio Ativo', { required: true, }],
+            ['dosagem', 'Dosagem', { required: true }],
+            ['dataVencimento', 'Data de Vencimento', { required: true, type: 'date', InputLabelProps: { shrink: true } }],
+            ['nomeComercial', 'Nome Comercial', { required: true }],
+            ['outrasEspecificacoes', 'Outras especificações', { multiline: true, rowsMax: 4 }],
+            ['laboratorio', 'Laboratório', { required: true }],
+            ['valorEstoque', 'Estoque', { required: true, type: 'number', min: 0, step: 1, }, editItemId],
+        ]
+
         return (
             <>
                 <Header title="Pontos de Apoio" backButton />
@@ -190,7 +194,8 @@ class MedicinesView extends Component {
                         <form method="post" onSubmit={this.createItem}>
                             <DialogContent>
                                 <DialogContentText>Preencha os dados abaixo</DialogContentText>
-                                {fields.map(([field, label, args = {}], i) =>
+
+                                {fields.map(([field, label, args = {}, hidden], i) => !hidden &&
                                     <TextField
                                         key={field}
                                         autoFocus={i === 0}

@@ -11,25 +11,35 @@ import News from './components/views/News';
 import NewsSingle from './components/views/NewsSingle';
 import PontosApoio from './components/views/PontosApoio';
 import MedicinesView from './components/views/Medicines';
+import { AuthContextProvider } from './lib/authContext';
+import { SdkContextProvider } from './lib/sdkContext';
+import UsersView from './components/views/Users';
+import NotFound from './components/views/NotFound';
 
 class App extends Component {
     render() {
         return (
-            <Router>
-                <MuiThemeProvider theme={theme}>
-                    <UpdateHandler appServiceWorker={this.props.appServiceWorker}>
-                        <Switch>
-                            <Route exact path="/" component={Home} />
-                            <Route exact path="/about" component={About} />
-                            <Route exact path="/news" component={News} />
-                            <Route exact path="/news/:id" component={NewsSingle} />
-                            <Route exact path="/news/:id" component={NewsSingle} />
-                            <Route exact path="/place" component={PontosApoio} />
-                            <Route exact path="/medicine" component={MedicinesView} />
-                        </Switch>
-                    </UpdateHandler>
-                </MuiThemeProvider>
-            </Router>
+            <SdkContextProvider>
+                <AuthContextProvider>
+                    <Router>
+                        <MuiThemeProvider theme={theme}>
+                            <UpdateHandler appServiceWorker={this.props.appServiceWorker}>
+                                <Switch>
+                                    <Route exact path="/" component={Home} />
+                                    <Route exact path="/about" component={About} />
+                                    <Route exact path="/news" component={News} />
+                                    <Route exact path="/news/:id" component={NewsSingle} />
+                                    <Route exact path="/news/:id" component={NewsSingle} />
+                                    <Route exact path="/place" component={PontosApoio} />
+                                    <Route exact path="/medicine" component={MedicinesView} />
+                                    <Route exact path="/user" component={UsersView} />
+                                    <Route path="/" component={NotFound} />
+                                </Switch>
+                            </UpdateHandler>
+                        </MuiThemeProvider>
+                    </Router>
+                </AuthContextProvider>
+            </SdkContextProvider>
         );
     }
 }
