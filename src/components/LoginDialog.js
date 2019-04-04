@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react'
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText } from '@material-ui/core';
+import { withAuth } from '../lib/authContext';
 
-export default class LoginDialog extends Component {
+class LoginDialog extends Component {
     state = {
         tab: 'login',
         email: '',
@@ -36,10 +37,10 @@ export default class LoginDialog extends Component {
     }
 
     render() {
-        const { onLogin, onRegister, ...props } = this.props
+        const { onLogin, onRegister, error, user, ...props } = this.props
         return (
             <div>
-                <Dialog {...props}>
+                <Dialog open={Boolean(user)} {...props}>
                     {this.state.tab === 'login' ?
                         <form onSubmit={this.onLogin}>
                             <DialogTitle>Identifique-se</DialogTitle>
@@ -66,8 +67,8 @@ export default class LoginDialog extends Component {
                                     value={this.state.password}
                                     onChange={e => this.setState({ password: e.target.value })}
                                 />
-                                {this.props.userError &&
-                                    <DialogContentText style={{ color: 'red' }}>{this.props.userError.data}</DialogContentText>}
+                                {error &&
+                                    <DialogContentText style={{ color: 'red' }}>{error.data}</DialogContentText>}
                             </DialogContent>
                             <DialogActions>
                                 <Button type="submit" color="primary">Entrar</Button>
@@ -123,3 +124,12 @@ export default class LoginDialog extends Component {
         )
     }
 }
+
+
+export default withAuth(
+    ({ login, userError: error, user }) => ({
+        onLogin: ({ email, password }) => login(email, password),
+        onRegister: console.info,
+        error, user,
+    })
+)(LoginDialog)

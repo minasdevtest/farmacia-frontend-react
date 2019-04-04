@@ -3,6 +3,7 @@ import Header from '../Header';
 import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide } from '@material-ui/core';
 import FarmaSdk from '../../lib/farmaSDK'
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
+import { withLogin } from '../LoginView';
 
 const fields = [
     ['nome', 'Nome do Local', { required: true }],
@@ -190,4 +191,4 @@ function Transition(props) {
     return <Slide direction="up" {...props} />
 }
 
-export default PontosApoio;
+export default withLogin(PontosApoio);

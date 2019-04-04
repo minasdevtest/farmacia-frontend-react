@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { withStyles, IconButton, Typography, Toolbar, AppBar, Button } from '@material-ui/core'
+import { withStyles, IconButton, Typography, Toolbar, AppBar, Button, Menu, MenuItem } from '@material-ui/core'
 import {
-    ArrowBack as ArrowBackIcon,
+    ArrowBack as ArrowBackIcon, AccountCircle,
 } from '@material-ui/icons'
 import { withAuth } from '../lib/authContext';
 import LoginDialog from './LoginDialog';
@@ -22,12 +22,22 @@ const styles = {
 
 class Header extends Component {
 
-    state = { loginDialogOpen: false }
+    state = { loginDialogOpen: false, userMenuOpen: null }
 
     goBack = () => window.history.back()
 
+    static getDerivedStateFromProps({ user }, { userMenuOpen, loginDialogOpen }) {
+        const stateUpdate = {}
+        if (!user && userMenuOpen)
+            stateUpdate.userMenuOpen = null
+        if (user && loginDialogOpen)
+            stateUpdate.loginDialogOpen = false
+
+        return Object.keys(stateUpdate).length ? stateUpdate : null
+    }
+
     render() {
-        const { children, classes, title, backButton = false, onBack, rightAction, appBarProps, user, userError, onLogin, onLogout, ...props } = this.props
+        const { children, classes, title, backButton = false, onBack, rightAction, appBarProps, user, onLogout, ...props } = this.props
 
         return (
             <>
@@ -48,7 +58,21 @@ class Header extends Component {
 
                         <div>
                             {user ?
-                                <Button color="inherit" onClick={onLogout}>Desconectar de {user.name}</Button> :
+                                <>
+                                    <IconButton color="inherit" onClick={e => this.setState({ userMenuOpen: e.target })}>
+                                        <AccountCircle />
+                                    </IconButton>
+                                    <Menu
+                                        anchorEl={this.state.userMenuOpen}
+                                        open={Boolean(this.state.userMenuOpen)}
+                                        onClose={() => this.setState({ userMenuOpen: null })}
+                                    >
+                                        <MenuItem disabled>Logado como {' ' + user.name.split(' ').slice(0, 2).join(' ')}</MenuItem>
+                                        <MenuItem>Editar Conta</MenuItem>
+                                        <MenuItem onClick={onLogout}>Sair</MenuItem>
+                                    </Menu>
+                                </>
+                                :
                                 <Button color="inherit" onClick={() => this.setState({ loginDialogOpen: true })}>Fazer Login</Button>}
                             {rightAction}
                         </div>
@@ -56,13 +80,7 @@ class Header extends Component {
                     {children}
                 </AppBar>
 
-                <LoginDialog
-                    open={user === null && this.state.loginDialogOpen}
-                    userError={userError}
-                    onClose={() => this.setState({ loginDialogOpen: false })}
-                    onLogin={onLogin}
-                    onRegister={console.info}
-                />
+                <LoginDialog open={this.state.loginDialogOpen} onClose={() => this.setState({ loginDialogOpen: false })} />
 
             </>
         )
@@ -71,9 +89,5 @@ class Header extends Component {
 }
 
 export default withAuth(
-    ({ login, logout, ...props }) => ({
-        onLogin: ({ email, password }) => login(email, password),
-        onLogout: logout,
-        ...props
-    })
+    ({ logout: onLogout, user }) => ({ onLogout, user })
 )(withStyles(styles)(Header));

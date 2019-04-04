@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import FarmaSdk from './farmaSDK';
 
 export const AuthContext = React.createContext({
-    user: null, error: null, login: () => { }, logout: () => { }
+    user: null, userError: null, login: () => { }, logout: () => { }
 })
 
 export class AuthContextProvider extends Component {
@@ -39,14 +39,15 @@ export class AuthContextProvider extends Component {
             .catch(err => this.setState({ error: err.response }))
     }
 
+    handleLogout = () => this.client.logout()
+
     render() {
-        const { client } = this
         return (
             <AuthContext.Provider value={{
                 user: this.state.user,
                 userError: this.state.error,
                 login: this.handleLogin,
-                logout: () => this.client.logout(),
+                logout: this.handleLogout,
             }}>
                 {this.props.children}
             </AuthContext.Provider>
@@ -55,7 +56,7 @@ export class AuthContextProvider extends Component {
 }
 
 export const withAuth =
-    (mapProps = props => props) =>
+    (mapProps = props => props, fallback = null) =>
         Component =>
             props => (
                 <AuthContext.Consumer>

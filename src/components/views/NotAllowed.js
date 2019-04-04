@@ -3,22 +3,21 @@ import Header from '../Header';
 import { Card, CardContent, Button, CardActions } from '@material-ui/core';
 import { Link } from 'react-router-dom'
 
-class NotFound extends Component {
+class NotAllowed extends Component {
     render() {
         return (
             <Fragment>
-                <Header title="Página não encontrada" />
+                <Header title="Permissão Negada" />
                 <main>
                     <Card style={{ margin: 10 }}>
                         <CardContent>
                             <p>
-                                não há nada aqui
+                                Você não tem permissão para acessar este conteúdo
                             </p>
                         </CardContent>
                         <CardActions>
                             <Button component={Link} to="" size="large" variant="contained" color="primary">Início</Button>
                         </CardActions>
-
                     </Card>
 
                 </main>
@@ -27,4 +26,4 @@ class NotFound extends Component {
     }
 }
 
-export default NotFound;
+export default NotAllowed;

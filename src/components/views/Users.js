@@ -3,6 +3,7 @@ import Header from '../Header';
 import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
 import { withSdk } from '../../lib/sdkContext';
+import { withLogin } from '../LoginView';
 
 /**
  *
@@ -13,7 +14,6 @@ import { withSdk } from '../../lib/sdkContext';
 class UsersView extends Component {
 
     constructor(props) {
-        console.warn(props)
         super(props);
         this.state = {
             loading: true,
@@ -22,14 +22,11 @@ class UsersView extends Component {
             newItemOpen: false,
             editItemId: null,
             sending: false,
-            deleting: false,
-            statusOptions: [],
-            typesOptions: []
+            deleting: false
         }
     }
 
     get sdk() {
-        console.warn(this.props.sdk)
         return this.props.sdk
     }
 
@@ -80,7 +77,7 @@ class UsersView extends Component {
     }
 
     render() {
-        const { newItemOpen, newItem, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
+        const { newItemOpen, newItem, items, loading, sending, editItemId } = this.state
 
         const fields = [
             ['name', 'Nome', { required: true }],
@@ -216,4 +213,4 @@ function Transition(props) {
     return <Slide direction="up" {...props} />
 }
 
-export default withSdk(v => v)(UsersView);
+export default withSdk()(withLogin(UsersView));

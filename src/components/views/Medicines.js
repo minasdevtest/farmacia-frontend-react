@@ -3,6 +3,7 @@ import Header from '../Header';
 import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem, FormControlLabel, Checkbox } from '@material-ui/core';
 import FarmaSdk from '../../lib/farmaSDK'
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
+import { withLogin } from '../LoginView';
 
 class MedicinesView extends Component {
     constructor(props) {
@@ -284,4 +285,4 @@ function Transition(props) {
     return <Slide direction="up" {...props} />
 }
 
-export default MedicinesView;
+export default withLogin(MedicinesView);

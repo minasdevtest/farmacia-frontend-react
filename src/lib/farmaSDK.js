@@ -34,7 +34,6 @@ export default class FarmaSdk {
     _session = null
 
     constructor({ apiURL = defaultUrl } = {}) {
-        console.log(FarmaSdk)
         this.apiURL = apiURL
         this.rootRoute = '/api/v1'
         this.ajax = Axios.create({
