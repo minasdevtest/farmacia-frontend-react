@@ -186,7 +186,7 @@ class MedicinesView extends Component {
                         onClose={this.dialogToggle}
                         TransitionComponent={Transition}
                     >
-                        <Header title={editItemId ? `Editar` : 'Novo'}
+                        <Header simple title={editItemId ? `Editar` : 'Novo'}
                             rightAction={
                                 <IconButton color="inherit" disabled={sending} onClick={this.dialogToggle}>
                                     <CloseIcon />

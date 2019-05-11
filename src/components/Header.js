@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { withStyles, IconButton, Typography, Toolbar, AppBar, Button, Menu, MenuItem } from '@material-ui/core'
-import {
-    ArrowBack as ArrowBackIcon, AccountCircle,
-} from '@material-ui/icons'
+import { ArrowBack as ArrowBackIcon, AccountCircle } from '@material-ui/icons'
 import { withAuth } from '../lib/authContext';
 import LoginDialog from './LoginDialog';
+import { Link } from 'react-router-dom'
 
 
 const styles = {
@@ -37,7 +36,7 @@ class Header extends Component {
     }
 
     render() {
-        const { children, classes, title, backButton = false, onBack, rightAction, appBarProps, user, onLogout, ...props } = this.props
+        const { simple, children, classes, title, backButton = false, onBack, rightAction, appBarProps, user, onLogout, ...props } = this.props
 
         return (
             <>
@@ -57,23 +56,25 @@ class Header extends Component {
                         }
 
                         <div>
-                            {user ?
-                                <>
-                                    <IconButton color="inherit" onClick={e => this.setState({ userMenuOpen: e.target })}>
-                                        <AccountCircle />
-                                    </IconButton>
-                                    <Menu
-                                        anchorEl={this.state.userMenuOpen}
-                                        open={Boolean(this.state.userMenuOpen)}
-                                        onClose={() => this.setState({ userMenuOpen: null })}
-                                    >
-                                        <MenuItem disabled>Logado como {' ' + user.name.split(' ').slice(0, 2).join(' ')}</MenuItem>
-                                        <MenuItem>Editar Conta</MenuItem>
-                                        <MenuItem onClick={onLogout}>Sair</MenuItem>
-                                    </Menu>
-                                </>
-                                :
-                                <Button color="inherit" onClick={() => this.setState({ loginDialogOpen: true })}>Fazer Login</Button>}
+                            {!simple && (
+                                user ?
+                                    <>
+                                        <IconButton color="inherit" onClick={e => this.setState({ userMenuOpen: e.target })}>
+                                            <AccountCircle />
+                                        </IconButton>
+                                        <Menu
+                                            anchorEl={this.state.userMenuOpen}
+                                            open={Boolean(this.state.userMenuOpen)}
+                                            onClose={() => this.setState({ userMenuOpen: null })}
+                                        >
+                                            <MenuItem disabled>Logado como {' ' + user.name.split(' ').slice(0, 2).join(' ')}</MenuItem>
+                                            <MenuItem to="/me" component={Link} >Editar Conta</MenuItem>
+                                            <MenuItem onClick={onLogout}>Sair</MenuItem>
+                                        </Menu>
+                                    </> :
+                                    <Button color="inherit" onClick={() => this.setState({ loginDialogOpen: true })}>Fazer Login</Button>
+                            )}
+
                             {rightAction}
                         </div>
                     </Toolbar>

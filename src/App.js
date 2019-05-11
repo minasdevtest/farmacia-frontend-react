@@ -15,6 +15,7 @@ import { AuthContextProvider } from './lib/authContext';
 import { SdkContextProvider } from './lib/sdkContext';
 import UsersView from './components/views/Users';
 import NotFound from './components/views/NotFound';
+import UserForm from './components/views/UserForm';
 
 class App extends Component {
     render() {
@@ -33,6 +34,7 @@ class App extends Component {
                                     <Route exact path="/place" component={PontosApoio} />
                                     <Route exact path="/medicine" component={MedicinesView} />
                                     <Route exact path="/user" component={UsersView} />
+                                    <Route exact path="/me" component={UserForm} />
                                     <Route path="/" component={NotFound} />
                                 </Switch>
                             </UpdateHandler>

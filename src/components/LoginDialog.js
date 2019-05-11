@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText, CircularProgress } from '@material-ui/core';
 import { withAuth } from '../lib/authContext';
 
 class LoginDialog extends Component {
@@ -8,9 +8,8 @@ class LoginDialog extends Component {
         tab: 'login',
         email: '',
         password: '',
-        name: ''
+        name: '',
     }
-
 
     toggleTab = e => {
         this.stopEvent(e)
@@ -37,50 +36,46 @@ class LoginDialog extends Component {
     }
 
     render() {
-        const { onLogin, onRegister, error, user, ...props } = this.props
+        const { onLogin, onRegister, error, user, loading, ...props } = this.props
+        const isLogin = this.state.tab === 'login'
         return (
             <div>
                 <Dialog open={Boolean(user)} {...props}>
-                    {this.state.tab === 'login' ?
-                        <form onSubmit={this.onLogin}>
-                            <DialogTitle>Identifique-se</DialogTitle>
-                            <DialogContent>
+                    <form onSubmit={isLogin ? this.onLogin : this.onRegister}>
+                        <DialogTitle>{isLogin ? 'Identifique-se' : 'Registrar'}</DialogTitle>
+                        <DialogContent>
+                            <TextField
+                                required
+                                autoFocus
+                                disabled={loading}
+                                margin="dense"
+                                id="email"
+                                label="Email"
+                                type="email"
+                                name="email"
+                                fullWidth
+                                value={this.state.email}
+                                onChange={e => this.setState({ email: e.target.value })}
+                            />
+                            <TextField
+                                required
+                                autoFocus
+                                disabled={loading}
+                                margin="dense"
+                                id="password"
+                                label="Senha"
+                                type="password"
+                                name="password"
+                                fullWidth
+                                value={this.state.password}
+                                onChange={e => this.setState({ password: e.target.value })}
+                            />
+
+                            {!isLogin &&
                                 <TextField
+                                    required
                                     autoFocus
-                                    margin="dense"
-                                    id="email"
-                                    label="Email"
-                                    type="email"
-                                    name="email"
-                                    fullWidth
-                                    value={this.state.email}
-                                    onChange={e => this.setState({ email: e.target.value })}
-                                />
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    id="password"
-                                    label="Senha"
-                                    type="password"
-                                    name="password"
-                                    fullWidth
-                                    value={this.state.password}
-                                    onChange={e => this.setState({ password: e.target.value })}
-                                />
-                                {error &&
-                                    <DialogContentText style={{ color: 'red' }}>{error.data}</DialogContentText>}
-                            </DialogContent>
-                            <DialogActions>
-                                <Button type="submit" color="primary">Entrar</Button>
-                                <Button onClick={this.toggleTab}>Fazer Registro</Button>
-                            </DialogActions>
-                        </form>
-                        :
-                        <form onSubmit={this.onRegister}>
-                            <DialogTitle>Registrar</DialogTitle>
-                            <DialogContent>
-                                <TextField
-                                    autoFocus
+                                    disabled={loading}
                                     margin="dense"
                                     id="name"
                                     label="Nome"
@@ -90,35 +85,21 @@ class LoginDialog extends Component {
                                     value={this.state.name}
                                     onChange={e => this.setState({ name: e.target.value })}
                                 />
+                            }
 
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    id="email"
-                                    label="Email"
-                                    type="email"
-                                    name="email"
-                                    fullWidth
-                                    value={this.state.email}
-                                    onChange={e => this.setState({ email: e.target.value })}
-                                />
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    id="password"
-                                    label="Senha"
-                                    type="password"
-                                    name="password"
-                                    fullWidth
-                                    value={this.state.password}
-                                    onChange={e => this.setState({ password: e.target.value })}
-                                />
-                            </DialogContent>
-                            <DialogActions>
-                                <Button type="submit" color="primary">Cadastrar</Button>
-                                <Button onClick={this.toggleTab}>Fazer Login</Button>
-                            </DialogActions>
-                        </form>}
+                            {error &&
+                                <DialogContentText style={{ color: 'red' }}>{error.data}</DialogContentText>}
+                        </DialogContent>
+                        <DialogActions>
+                            {loading && <CircularProgress size={28} />}
+                            <Button disabled={loading} type="submit" color="primary">
+                                {isLogin ? 'Entrar' : 'Cadastrar'}
+                            </Button>
+                            <Button disabled={loading} onClick={this.toggleTab}>
+                                {isLogin ? 'Fazer Registro' : 'Fazer Login'}
+                            </Button>
+                        </DialogActions>
+                    </form>
                 </Dialog>
             </div>
         )
@@ -127,9 +108,9 @@ class LoginDialog extends Component {
 
 
 export default withAuth(
-    ({ login, userError: error, user }) => ({
+    ({ login, userError: error, user, loading = false }) => ({
         onLogin: ({ email, password }) => login(email, password),
         onRegister: console.info,
-        error, user,
+        error, user, loading,
     })
 )(LoginDialog)

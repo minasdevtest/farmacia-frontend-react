@@ -148,7 +148,7 @@ class PontosApoio extends Component {
                         onClose={this.dialogToggle}
                         TransitionComponent={Transition}
                     >
-                        <Header title={newItem.id ? `Editar '${newItem.nome}'` : 'Novo Local'}
+                        <Header simple title={newItem.id ? `Editar '${newItem.nome}'` : 'Novo Local'}
                             rightAction={
                                 <IconButton color="inherit" disabled={sending} onClick={this.dialogToggle}>
                                     <CloseIcon />

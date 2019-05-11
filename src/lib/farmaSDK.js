@@ -1,9 +1,10 @@
 import Axios from "axios";
+import BaseModule from "./BaseModule";
 
 const defaultUrl =
-    window.location.hostname === 'localhost' ?
-        'http://localhost:3010' :
-        'https://farmaciasolidaria-middleware.herokuapp.com'
+    // window.location.hostname === 'localhost' ?
+    // 'http://localhost:3010' :
+    'https://farmaciasolidaria-middleware.herokuapp.com'
 
 const STORAGE_SESSION_KEY = 'farma-session'
 
@@ -14,17 +15,7 @@ const STORAGE_SESSION_KEY = 'farma-session'
  * @export
  * @class FarmaSdk
  */
-export default class FarmaSdk {
-
-    /**
-     * Event Listeners
-     * @var {Array[]}
-     * @memberof FarmaSdk
-     */
-    eventListeners = {
-        login: [],
-        logout: [],
-    }
+export default class FarmaSdk extends BaseModule {
 
     /**
      * stored session
@@ -34,6 +25,7 @@ export default class FarmaSdk {
     _session = null
 
     constructor({ apiURL = defaultUrl } = {}) {
+        super()
         this.apiURL = apiURL
         this.rootRoute = '/api/v1'
         this.ajax = Axios.create({
@@ -43,7 +35,7 @@ export default class FarmaSdk {
     }
 
     get session() {
-        return this._session = this._session = JSON.parse(localStorage.getItem(STORAGE_SESSION_KEY))
+        return this._session || (this._session = JSON.parse(localStorage.getItem(STORAGE_SESSION_KEY)))
     }
 
     set session(value) {
@@ -54,28 +46,14 @@ export default class FarmaSdk {
         this._session = value
     }
 
-    on(event, listener) {
-        if (!this.eventListeners[event]) this.eventListeners[event] = []
-        this.eventListeners[event].push(listener)
-    }
-
-    off(event, listener) {
-        const listeners = this.eventListeners[event] || []
-        const index = listeners.findIndex(l => l === listener)
-        if (index > -1)
-            listeners.splice(index, 1)
-    }
-
-    trigger(event, ...args) {
-        const listeners = this.eventListeners[event] || []
-        listeners.forEach(listener => listener(...args))
-    }
+    doLogin = user => this.trigger('login', user)
+    doLogout = () => this.trigger('logout')
 
     onStorageChange = ({ key, oldValue, newValue }) => {
         if (key !== STORAGE_SESSION_KEY) return
         if (newValue)
-            return this.trigger('login', this.session)
-        this.trigger('logout')
+            return this.doLogin(this.session)
+        this.doLogout()
     }
 
     login(email, password) {
@@ -83,7 +61,7 @@ export default class FarmaSdk {
             .then(({ user, token }) => {
                 this.ajax.defaults.headers['Authorization'] = `Bearer ${token}`
                 this.session = { user, token }
-                this.trigger('login', user)
+                this.doLogin(user)
                 return user
             })
     }
@@ -91,7 +69,7 @@ export default class FarmaSdk {
     logout() {
         this.session = null
         delete this.ajax.defaults.headers['Authorization']
-        this.trigger('logout')
+        this.doLogout()
     }
 
 
@@ -157,12 +135,15 @@ export default class FarmaSdk {
         return this.fetch(`/user/${_id}`)
     }
 
+    getCurrentUser() {
+        return this.session ? this.fetch(`/user/${this.session.user._id}`) : Promise.reject(new Error('No user'))
+    }
+
     createUser(user) {
         return user._id ?
             this.updateUser(user) :
             this.fetch('/user', user, { method: 'post' })
     }
-
 
     updateUser({ _id, ...user }) {
         return this.fetch(`/user/${_id}`, user, { method: 'put' })
@@ -181,25 +162,5 @@ export default class FarmaSdk {
             data,
             ...args
         }).then(res => res.data)
-    }
-
-    /**
-     * Instance
-     * @var {FarmaSdk}
-     * @static
-     * @memberof FarmaSdk
-     */
-    static i = null
-
-    /**
-     * Get instance
-     *
-     * @static
-     * @param {Object} props
-     * @returns {FarmaSdk} 
-     * @memberof FarmaSdk
-     */
-    static instance(...props) {
-        return this.i = this.i || new this(...props)
     }
 }

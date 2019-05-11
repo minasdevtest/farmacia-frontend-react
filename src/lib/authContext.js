@@ -10,7 +10,8 @@ export class AuthContextProvider extends Component {
         super(props)
         this.state = {
             user: this.client.session && this.client.session.user,
-            error: null
+            error: null,
+            loading: false,
         }
     }
     get client() {
@@ -24,28 +25,31 @@ export class AuthContextProvider extends Component {
 
     componentDidMount() {
         this.client.on('login', this.handleUserLogin)
+        this.client.on('updateUser', this.handleLogin)
         this.client.on('logout', this.handleUserLogin)
     }
 
     componentWillUnmount() {
         this.client.off('login', this.handleUserLogin)
+        this.client.off('updateUser', this.handleLogin)
         this.client.off('logout', this.handleUserLogin)
     }
 
     handleLogin = (...args) => {
-        this.setState({ error: null })
+        this.setState({ error: null, loading: true })
         this.client
             .login(...args)
             .catch(err => this.setState({ error: err.response }))
+            .then(() => this.setState({ loading: false }))
     }
 
     handleLogout = () => this.client.logout()
 
     render() {
+        const { user, loading, error: userError } = this.state
         return (
             <AuthContext.Provider value={{
-                user: this.state.user,
-                userError: this.state.error,
+                user, userError, loading,
                 login: this.handleLogin,
                 logout: this.handleLogout,
             }}>
@@ -54,12 +58,16 @@ export class AuthContextProvider extends Component {
         )
     }
 }
-
+/**
+ * HOC for using auth
+ * 
+ * @param {Function} mapProps 
+ * @param {React.Component} fallback 
+ */
 export const withAuth =
-    (mapProps = props => props, fallback = null) =>
+    (mapProps = context => context, fallback = null) =>
         Component =>
-            props => (
+            props =>
                 <AuthContext.Consumer>
                     {context => <Component {...props} {...mapProps(context)} />}
                 </AuthContext.Consumer>
-            )
