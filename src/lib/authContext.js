@@ -45,6 +45,14 @@ export class AuthContextProvider extends Component {
 
     handleLogout = () => this.client.logout()
 
+    handleRegister = data => {
+        this.setState({ error: null, loading: true })
+        this.client
+            .register(data)
+            .catch(err => this.setState({ error: err.response }))
+            .then(() => this.setState({ loading: false }))
+    }
+
     render() {
         const { user, loading, error: userError } = this.state
         return (
@@ -52,6 +60,7 @@ export class AuthContextProvider extends Component {
                 user, userError, loading,
                 login: this.handleLogin,
                 logout: this.handleLogout,
+                register: this.handleRegister
             }}>
                 {this.props.children}
             </AuthContext.Provider>

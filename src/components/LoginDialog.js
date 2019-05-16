@@ -108,9 +108,9 @@ class LoginDialog extends Component {
 
 
 export default withAuth(
-    ({ login, userError: error, user, loading = false }) => ({
+    ({ login, register, userError: error, user, loading = false }) => ({
         onLogin: ({ email, password }) => login(email, password),
-        onRegister: console.info,
+        onRegister: data => register(data),
         error, user, loading,
     })
 )(LoginDialog)

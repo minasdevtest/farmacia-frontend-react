@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Header from '../Header';
 import { List, ListItem, ListItemText, Card } from '@material-ui/core';
 import { Link } from 'react-router-dom'
+import { WithRoles } from '../../lib/authHOC';
 
 class Home extends Component {
     render() {
@@ -26,10 +27,11 @@ class Home extends Component {
                                 <ListItemText primary="Notícias" secondary="Veja as últimas notícias" />
                             </ListItem>
 
-
-                            <ListItem button component={Link} to="user">
-                                <ListItemText primary="Usuários" secondary="Cadastre e gerencie usuários" />
-                            </ListItem>
+                            <WithRoles roles="admin">
+                                <ListItem button component={Link} to="user">
+                                    <ListItemText primary="Usuários" secondary="Cadastre e gerencie usuários" />
+                                </ListItem>
+                            </WithRoles>
 
                             <ListItem button component={Link} to="about">
                                 <ListItemText primary="Sobre" secondary="Saiba mais sobre o aplicativo" />

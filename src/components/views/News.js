@@ -3,6 +3,7 @@ import Header from '../Header';
 import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import FarmaSdk from '../../lib/farmaSDK'
+import { WithRoles } from '../../lib/authHOC';
 
 /**
  * News Component
@@ -36,7 +37,11 @@ class News extends Component {
     render() {
         return (
             <>
-                <Header title="Notícias" backButton rightAction={<Button component="a" color="inherit" target="blank" href="http://18.222.72.102:3000/wp-admin/">Ir para o painel</Button>} />
+                <Header title="Notícias" backButton rightAction={
+                    <WithRoles roles="admin">
+                        <Button component="a" color="inherit" target="blank" href="http://18.222.72.102:3000/wp-admin/">Ir para o painel</Button>
+                    </WithRoles>
+                } />
                 <main>
                     {this.state.loading ? <CircularProgress /> :
                         this.state.news.map(article =>

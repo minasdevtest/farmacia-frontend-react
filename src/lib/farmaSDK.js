@@ -2,16 +2,16 @@ import Axios from "axios";
 import BaseModule from "./BaseModule";
 
 const defaultUrl =
-    // window.location.hostname === 'localhost' ?
-    // 'http://localhost:3010' :
-    'https://farmaciasolidaria-middleware.herokuapp.com'
+    window.location.hostname === 'localhost' ?
+        'http://localhost:3010' :
+        'https://farmaciasolidaria-middleware.herokuapp.com'
 
 const STORAGE_SESSION_KEY = 'farma-session'
 
 /**
  * Main SDK
  *
- * @namespace
+ * @namespace FarmaSdk
  * @export
  * @class FarmaSdk
  */
@@ -56,8 +56,13 @@ export default class FarmaSdk extends BaseModule {
         this.doLogout()
     }
 
+    register(data) {
+        return this.fetch('/me', data, 'post')
+            .then(() => this.login(data.email, data.password))
+    }
+
     login(email, password) {
-        return this.fetch('/login', { email, password }, { method: 'post' })
+        return this.fetch('/login', { email, password }, 'post')
             .then(({ user, token }) => {
                 this.ajax.defaults.headers['Authorization'] = `Bearer ${token}`
                 this.session = { user, token }
@@ -72,53 +77,36 @@ export default class FarmaSdk extends BaseModule {
         this.doLogout()
     }
 
+    news = () => this.fetch('/news?_embed')
 
-    news() {
-        return this.fetch('/news?_embed')
-    }
-
-    singleNews(id) {
-        return this.fetch(`/news/${id}?_embed`)
-    }
+    singleNews = id => this.fetch(`/news/${id}?_embed`)
 
     location({ field, value } = {}) {
         const filter = field ? `${field}=${value}` : ''
         return this.fetch(`/location`, filter)
     }
 
-    saveLocation(location) {
-        return location.id ? this.updateLocation(location) : this.fetch('/location', location, { method: 'post' })
-    }
+    saveLocation = location => location.id ?
+        this.updateLocation(location) :
+        this.fetch('/location', location, 'post')
 
-    updateLocation(location) {
-        return this.fetch(`/location/${location.id}`, location, { method: 'put' })
-    }
+    updateLocation = location => this.fetch(`/location/${location.id}`, location, 'put')
 
-    deleteLocation(id) {
-        return this.fetch(`/location/${id}`, null, { method: 'delete' })
-    }
+    deleteLocation = id => this.fetch(`/location/${id}`, null, 'delete')
 
     // Medicamentos
-    medicine() {
-        return this.fetch('/medicine').then(({ content }) => content)
-    }
+    medicine = () => this.fetch('/medicine').then(({ content }) => content)
 
-    medicineStatus() {
-        return this.fetch('/medicine/status')
-    }
+    medicineStatus = () => this.fetch('/medicine/status')
 
-    medicineTypes() {
-        return this.fetch('/medicine/types')
-    }
+    medicineTypes = () => this.fetch('/medicine/types')
 
     saveMedicine(item, edit) {
         alert(edit)
-        return edit ? this.updateMedicine(item, edit) : this.fetch('/medicine', item, { method: 'post' })
+        return edit ? this.updateMedicine(item, edit) : this.fetch('/medicine', item, 'post')
     }
 
-    updateMedicine(item, id) {
-        return this.fetch(`/medicine/${id}`, item, { method: 'put' })
-    }
+    updateMedicine = (item, id) => this.fetch(`/medicine/${id}`, item, 'put')
 
     deleteMedicine(id) {
         // TODO: support delete
@@ -127,40 +115,46 @@ export default class FarmaSdk extends BaseModule {
     }
 
     //Users
-    getUsers() {
-        return this.fetch('/user')
-    }
-
-    getUser(_id) {
-        return this.fetch(`/user/${_id}`)
-    }
-
-    getCurrentUser() {
-        return this.session ? this.fetch(`/user/${this.session.user._id}`) : Promise.reject(new Error('No user'))
-    }
-
-    createUser(user) {
-        return user._id ?
-            this.updateUser(user) :
-            this.fetch('/user', user, { method: 'post' })
-    }
-
-    updateUser({ _id, ...user }) {
-        return this.fetch(`/user/${_id}`, user, { method: 'put' })
-    }
+    getUsers = () => this.fetch('/user')
 
 
-    deleteUser(_id) {
-        return this.fetch(`/user/${_id}`, null, { method: 'delete' })
-    }
+    getUser = _id => this.fetch(`/user/${_id}`)
+
+    createUser = user => user._id ?
+        this.updateUser(user) :
+        this.fetch('/user', user, 'post')
+
+    updateUser = ({ _id, ...user }) => this.fetch(`/user/${_id}`, user, 'put')
+
+    deleteUser = _id => this.fetch(`/user/${_id}`, null, 'delete')
+
+    // current user magement
+    getAccount = () => this.fetch('/me')
+
+    updateAccount = data => this.fetch('/me', data, 'put')
+
+    updateAccountPassword = data => this.fetch('/me/password', data, 'put')
+
+    deleteAccount = () => this.fetch('/me', null, 'delete').then(data => { this.logout(); return data })
 
     // GERAL
     fetch(route, data, args = {}) {
-        return this.ajax({
-            method: 'get',
-            url: route,
-            data,
-            ...args
-        }).then(res => res.data)
+        if (typeof args === 'string')
+            args = { method: args }
+
+        return this
+            .ajax({
+                method: 'get',
+                url: route,
+                data,
+                ...args
+            })
+            .then(res => res.data)
+            .catch(err => {
+                // delete session if not authorized
+                if (err.response && err.response.status === 401 && this.session)
+                    this.logout()
+                return Promise.reject(err)
+            })
     }
 }

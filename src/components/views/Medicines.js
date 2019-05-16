@@ -4,6 +4,7 @@ import { Typography, CircularProgress, Button, TextField, Table, TableRow, Table
 import FarmaSdk from '../../lib/farmaSDK'
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
 import { withLogin } from '../LoginView';
+import { WithRoles } from '../../lib/authHOC';
 
 class MedicinesView extends Component {
     constructor(props) {
@@ -60,7 +61,7 @@ class MedicinesView extends Component {
 
         item.usoVeterinario = item.usoVeterinario ? 'S' : 'N'
 
-        if(editItemId){
+        if (editItemId) {
             delete item.estoque
         }
 
@@ -153,20 +154,22 @@ class MedicinesView extends Component {
                                                 </TableCell>
 
                                                 <TableCell>
-                                                    <IconButton onClick={() => this.setState({
-                                                        newItem: {
-                                                            ...item,
-                                                            valorEstoque: item.estoque.quantidade,
-                                                            status: item.status && item.status.id,
-                                                            tipo: item.tipo && item.tipo.id,
-                                                        }, newItemOpen: true,
-                                                        editItemId: item.lote
-                                                    })} color="secondary">
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                    <IconButton disabled={this.state.deleting} onClick={() => this.deleteItem(item.id)}>
-                                                        <DeleteIcon />
-                                                    </IconButton>
+                                                    <WithRoles roles="admin">
+                                                        <IconButton onClick={() => this.setState({
+                                                            newItem: {
+                                                                ...item,
+                                                                valorEstoque: item.estoque.quantidade,
+                                                                status: item.status && item.status.id,
+                                                                tipo: item.tipo && item.tipo.id,
+                                                            }, newItemOpen: true,
+                                                            editItemId: item.lote
+                                                        })} color="secondary">
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                        <IconButton disabled={this.state.deleting} onClick={() => this.deleteItem(item.id)}>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </WithRoles>
                                                 </TableCell>
 
                                             </TableRow>
@@ -175,11 +178,15 @@ class MedicinesView extends Component {
                                 </Table>
                             </Paper>
                     }
-                    <Fab color="primary" title="Adicionar" aria-label="Adicionar"
-                        onClick={this.dialogToggle}
-                        style={{ position: 'sticky', bottom: 16, right: 16, float: 'right', margin: 16 }}>
-                        <AddIcon />
-                    </Fab>
+
+                    <WithRoles roles="admin">
+                        <Fab color="primary" title="Adicionar" aria-label="Adicionar"
+                            onClick={this.dialogToggle}
+                            style={{ position: 'sticky', bottom: 16, right: 16, float: 'right', margin: 16 }}>
+                            <AddIcon />
+                        </Fab>
+                    </WithRoles>
+
                     <Dialog
                         fullScreen
                         open={newItemOpen}

@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem, Card, CardContent, CardActions } from '@material-ui/core';
-import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
+import { Typography, Button, TextField, Card, CardContent, CardActions } from '@material-ui/core';
 import { withSdk } from '../../lib/sdkContext';
 import { withLogin } from '../LoginView';
-import FarmaSdk from '../../lib/farmaSDK';
+import { preventDefault } from '../../lib/util';
+
+/** @typedef {import('../../lib/farmaSDK').default} FarmaSDK */
+
 
 /**
  * Current User handler
@@ -16,9 +18,12 @@ import FarmaSdk from '../../lib/farmaSDK';
 class UserForm extends Component {
 
     state = {
-        loading: true,
         sending: false,
-        deleting: false
+        item: null,
+        passwordChange: {
+            password: '',
+            confirmation: ''
+        }
     }
 
     /**
@@ -26,25 +31,22 @@ class UserForm extends Component {
      *
      * @readonly
      * @memberof UserForm
-     * @returns {FarmaSdk}
+     * @returns {FarmaSDK}
      */
     get sdk() { return this.props.sdk }
 
     load = () => {
-        this.setState({ loading: true })
-        this.sdk.getCurrentUser()
+        this.setState({ sending: true })
+        this.sdk.getAccount()
             .then(item => this.setState({ item }))
             .catch(error => console.error(error) || this.setState({ error }))
-            .then(() => this.setState({ loading: false }))
+            .then(() => this.setState({ sending: false }))
     }
 
     componentDidMount = () => this.load()
 
-
-    updateUser = e => {
-        e && e.preventDefault()
-        if (this.state.sending)
-            return;
+    updateUser = () => {
+        if (this.state.sending) return;
         const item = { ...this.state.item }
 
         this.setState({ sending: true })
@@ -53,9 +55,36 @@ class UserForm extends Component {
             .catch(error => console.error(error) || this.setState({ error }))
     }
 
+    changePassword = () => {
+        if (this.state.sending) return;
+
+        const { password, confirmation } = this.state.passwordChange
+
+        if (password !== confirmation)
+            return this.setState({ error: { confirmation: true } })
+
+        this.setState({ sending: true, error: null })
+
+        this.sdk.updateAccountPassword({ password })
+            .then(() => this.setState({
+                sending: false,
+                passwordChange: {
+                    password: '',
+                    confirmation: ''
+                }
+            }))
+            .catch(error => console.error(error) || this.setState({ error }))
+    }
+
+    deleteUser = () => {
+        this.setState({ sending: true })
+        this.sdk.deleteAccount()
+            .then(() => this.setState({ sending: false }))
+            .catch(error => console.error(error) || this.setState({ error }))
+    }
 
     render() {
-        const { item } = this.state
+        const { passwordChange, item, error, sending } = this.state
 
         const fields = [
             ['name', 'Nome', { required: true }],
@@ -68,7 +97,7 @@ class UserForm extends Component {
                 <Header title="Dados Pessoais" backButton />
                 <main>
                     {item && <>
-                        <form method="post" onSubmit={this.updateUser}>
+                        <form method="put" onSubmit={preventDefault(this.updateUser)}>
                             <Card style={{ margin: 10 }}>
                                 <CardContent>
                                     <Typography gutterBottom variant="h5">Alterar informações pessoais</Typography>
@@ -85,32 +114,22 @@ class UserForm extends Component {
                                             onChange={e => this.setState({ item: { ...item, [field]: e.target.value } })}
                                             type="text"
                                             fullWidth
+                                            disabled={sending}
                                             {...args}
                                         />
                                     )}
 
                                 </CardContent>
                                 <CardActions>
-                                    <Button variant="contained" fullWidth size="large" type="submit" color="primary" disabled={this.sending}>Salvar</Button>
-                                    <Button variant="outlined" fullWidth size="large" disabled={this.sending} onClick={this.dialogToggle}>Cancelar</Button>
+                                    <Button disabled={sending} variant="contained" fullWidth size="large" type="submit" color="primary">Salvar</Button>
                                 </CardActions>
                             </Card>
                         </form>
 
-                        <form method="post" autoComplete="off">
+                        <form method="put" autoComplete="off" onSubmit={preventDefault(this.changePassword)}>
                             <Card style={{ margin: 10 }}>
                                 <CardContent>
                                     <Typography gutterBottom variant="h5">Alterar Senha</Typography>
-
-                                    <TextField
-                                        margin="dense"
-                                        id="password"
-                                        name="old-password"
-                                        label="Senha Antiga"
-                                        type="password"
-                                        fullWidth
-                                        required
-                                    />
 
                                     <TextField
                                         margin="dense"
@@ -120,6 +139,9 @@ class UserForm extends Component {
                                         type="password"
                                         fullWidth
                                         required
+                                        disabled={sending}
+                                        value={passwordChange.password}
+                                        onChange={e => this.setState({ passwordChange: { ...passwordChange, password: e.target.value } })}
                                     />
 
                                     <TextField
@@ -128,17 +150,37 @@ class UserForm extends Component {
                                         name="new-password-confirm"
                                         label="Confirmar nova senha"
                                         type="password"
-                                        fullWidth
-                                        required
+                                        fullWidth required
+                                        disabled={sending}
+                                        value={passwordChange.confirmation}
+                                        onChange={e => this.setState({ passwordChange: { ...passwordChange, confirmation: e.target.value } })}
+                                        error={error && error.confirmation}
+                                        helperText={error && error.confirmation && 'Senha diferente!'}
                                     />
 
                                 </CardContent>
                                 <CardActions>
-                                    <Button variant="contained" fullWidth size="large" type="submit" color="primary" disabled={this.sending}>Alterar Senha</Button>
-                                    <Button variant="outlined" fullWidth size="large" disabled={this.sending} onClick={this.dialogToggle}>Cancelar</Button>
+                                    <Button disabled={sending} variant="contained" fullWidth size="large" type="submit" color="primary">Alterar Senha</Button>
                                 </CardActions>
                             </Card>
                         </form>
+
+                        <Card style={{ margin: 10 }}>
+                            <CardContent>
+                                <Typography gutterBottom variant="h5">Deletar conta</Typography>
+                                <Typography gutterBottom>Esta ação é irreversível</Typography>
+
+                            </CardContent>
+                            <CardActions>
+                                <Button
+                                    variant="contained"
+                                    fullWidth
+                                    size="large"
+                                    color="primary"
+                                    disabled={sending}
+                                    onClick={this.deleteUser}>Deletar minha conta</Button>
+                            </CardActions>
+                        </Card>
                     </>}
                 </main>
             </>
