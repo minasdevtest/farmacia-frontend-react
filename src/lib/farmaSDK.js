@@ -1,10 +1,11 @@
 import Axios from "axios";
 import BaseModule from "./BaseModule";
+import { waitPromise } from "./util";
 
 const defaultUrl =
-    window.location.hostname === 'localhost' ?
-        'http://localhost:3010' :
-        'https://farmaciasolidaria-middleware.herokuapp.com'
+    // window.location.hostname === 'localhost' ?
+    //     'http://localhost:3010' :
+    'https://farmaciasolidaria-middleware.herokuapp.com'
 
 const STORAGE_SESSION_KEY = 'farma-session'
 
@@ -101,10 +102,9 @@ export default class FarmaSdk extends BaseModule {
 
     medicineTypes = () => this.fetch('/medicine/types')
 
-    saveMedicine(item, edit) {
-        alert(edit)
-        return edit ? this.updateMedicine(item, edit) : this.fetch('/medicine', item, 'post')
-    }
+    saveMedicine = (item, edit) => edit ?
+        this.updateMedicine(item, edit) :
+        this.fetch('/medicine', item, 'post')
 
     updateMedicine = (item, id) => this.fetch(`/medicine/${id}`, item, 'put')
 
@@ -112,6 +112,19 @@ export default class FarmaSdk extends BaseModule {
         // TODO: support delete
         // return this.fetch(`/medicine/${id}`, null, { method: 'delete' })
         return Promise.resolve()
+    }
+
+    requestMedicine() {
+        return waitPromise()
+    }
+
+    medicines = {
+        request: (id, amount) => waitPromise().then(() => ({
+            beginDate: (new Date()).getTime(),
+            endDate: (new Date()).getTime() + 1000 * 60 * 60 * 24 * 5,
+            amount,
+            id
+        }))
     }
 
     //Users
@@ -151,6 +164,7 @@ export default class FarmaSdk extends BaseModule {
             })
             .then(res => res.data)
             .catch(err => {
+                console.error('API ERROR: ', err)
                 // delete session if not authorized
                 if (err.response && err.response.status === 401 && this.session)
                     this.logout()

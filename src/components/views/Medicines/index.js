@@ -1,26 +1,44 @@
 import React, { Component } from 'react';
-import Header from '../Header';
-import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem, FormControlLabel, Checkbox } from '@material-ui/core';
-import FarmaSdk from '../../lib/farmaSDK'
-import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
-import { withLogin } from '../LoginView';
-import { WithRoles } from '../../lib/authHOC';
+import { Typography, CircularProgress, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton } from '@material-ui/core';
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon } from '@material-ui/icons';
+
+import { dateFormated } from 'lib/util'
+
+import Header from 'components/Header';
+import FarmaSdk from 'lib/farmaSDK'
+import { withLogin } from 'components/LoginView';
+import { WithRoles } from 'lib/authHOC';
+import MedicineEditDialog from './MedicineEditDialog';
+import MedicineDetails from './MedicineDetails';
+import MedicineRequestDetails from './MedicineRequestDetails';
 
 class MedicinesView extends Component {
     constructor(props) {
         super(props);
-        this.sdk = FarmaSdk.instance()
         this.state = {
             loading: true,
             items: [],
+            itemDetails: null,
             newItem: {},
             newItemOpen: false,
             editItemId: null,
             sending: false,
             deleting: false,
             statusOptions: [],
-            typesOptions: []
+            typesOptions: [],
+            // notificações
+            requestDetails: null
         }
+    }
+
+    /**
+     *
+     * @returns {FarmaSdk} instance
+     * @readonly
+     * @memberof MedicinesView
+     */
+    get sdk() {
+        return FarmaSdk.instance()
     }
 
     load = () => {
@@ -69,7 +87,14 @@ class MedicinesView extends Component {
         this.sdk.saveMedicine(item, editItemId)
             .then(items => this.setState({ newItem: {}, editItemId: null, sending: false, newItemOpen: false }))
             .then(this.load)
-            .catch(error => console.error(error) || this.setState({ error }))
+            .catch(error => this.setState({ error, sending: false }))
+    }
+
+    requestItem = (amount) => {
+        const { itemDetails } = this.state
+        this.setState({ sending: true })
+        this.sdk.medicines.request(itemDetails.lote, amount)
+            .then(requestDetails => this.setState({ sending: false, itemDetails: null, requestDetails }))
     }
 
     deleteItem = id => {
@@ -86,18 +111,7 @@ class MedicinesView extends Component {
     }
 
     render() {
-        const { newItemOpen, newItem, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
-
-        const fields = [
-            ['lote', 'Lote', { required: true, disabled: Boolean(editItemId) }],
-            ['principioAtivo', 'Principio Ativo', { required: true, }],
-            ['dosagem', 'Dosagem', { required: true }],
-            ['dataVencimento', 'Data de Vencimento', { required: true, type: 'date', InputLabelProps: { shrink: true } }],
-            ['nomeComercial', 'Nome Comercial', { required: true }],
-            ['outrasEspecificacoes', 'Outras especificações', { multiline: true, rowsMax: 4 }],
-            ['laboratorio', 'Laboratório', { required: true }],
-            ['valorEstoque', 'Estoque', { required: true, type: 'number', min: 0, step: 1, }, editItemId],
-        ]
+        const { requestDetails, newItemOpen, newItem, itemDetails, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
 
         return (
             <>
@@ -147,10 +161,7 @@ class MedicinesView extends Component {
                                                     <b>Dosagem: </b>{item.dosagem}<br />
                                                     {item.tipo.descricao}<br />
                                                     <b>Vencimento: </b>
-                                                    {item.dataVencimento
-                                                        .split('-')
-                                                        .reverse()
-                                                        .join('/')}
+                                                    {dateFormated(item.dataVencimento)}
                                                 </TableCell>
 
                                                 <TableCell>
@@ -170,6 +181,12 @@ class MedicinesView extends Component {
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </WithRoles>
+
+                                                    <WithRoles roles="user">
+                                                        <IconButton onClick={() => this.setState({ itemDetails: item })} color="primary">
+                                                            <PlusIcon />
+                                                        </IconButton>
+                                                    </WithRoles>
                                                 </TableCell>
 
                                             </TableRow>
@@ -187,109 +204,38 @@ class MedicinesView extends Component {
                         </Fab>
                     </WithRoles>
 
-                    <Dialog
-                        fullScreen
+                    <MedicineEditDialog
                         open={newItemOpen}
                         onClose={this.dialogToggle}
-                        TransitionComponent={Transition}
-                    >
-                        <Header simple title={editItemId ? `Editar` : 'Novo'}
-                            rightAction={
-                                <IconButton color="inherit" disabled={sending} onClick={this.dialogToggle}>
-                                    <CloseIcon />
-                                </IconButton>
-                            } />
-                        <form method="post" onSubmit={this.createItem}>
-                            <DialogContent>
-                                <DialogContentText>Preencha os dados abaixo</DialogContentText>
+                        onSubmit={this.createItem}
+                        editing={Boolean(editItemId)}
+                        item={newItem}
+                        onFieldChange={(field, value) => this.setState({ newItem: { ...newItem, [field]: value } })}
+                        {...{ typesOptions, statusOptions, sending }}
+                    />
 
-                                {fields.map(([field, label, args = {}, hidden], i) => !hidden &&
-                                    <TextField
-                                        key={field}
-                                        autoFocus={i === 0}
-                                        margin="dense"
-                                        id={field}
-                                        name={field}
-                                        label={label}
-                                        value={newItem[field] || ''}
-                                        onChange={e => this.setState({ newItem: { ...newItem, [field]: e.target.value } })}
-                                        type="text"
-                                        fullWidth
-                                        {...args
-                                        // { ...args, required: false }
-                                        }
-                                    />
-                                )}
+                    <WithRoles roles="user" callback={() => <>
+                        <MedicineDetails
+                            item={itemDetails}
+                            open={Boolean(itemDetails)}
+                            loading={sending}
+                            onClose={() => this.setState({ itemDetails: null })}
+                            onRequest={this.requestItem}
+                        />
+                        <MedicineRequestDetails
+                            open={Boolean(requestDetails)}
+                            onClose={() => !sending && this.setState({ requestDetails: null })}
+                            request={requestDetails}
+                        />
+                    </>} />
 
-                                <TextField
-                                    margin="dense"
-                                    id="tipo"
-                                    name="tipo"
-                                    label="Tipo de medicamento"
-                                    value={newItem.tipo || 'none'}
-                                    onChange={e => this.setState({ newItem: { ...newItem, tipo: e.target.value } })}
-                                    InputLabelProps={{ shrink: true }}
-                                    select
-                                    fullWidth>
 
-                                    <MenuItem value="none" disabled>
-                                        {typesOptions.length ? 'Selecione...' : 'Carregando...'}
-                                    </MenuItem>
-                                    {typesOptions.map(option => (
-                                        <MenuItem key={option.id} value={option.id}>
-                                            {option.descricao}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
 
-                                <TextField
-                                    margin="dense"
-                                    id="status"
-                                    name="status"
-                                    label="Status"
-                                    value={newItem.status || 'none'}
-                                    onChange={e => this.setState({ newItem: { ...newItem, status: e.target.value } })}
-                                    select
-                                    fullWidth>
-                                    <MenuItem value="none" disabled>
-                                        {statusOptions.length ? 'Selecione...' : 'Carregando...'}
-                                    </MenuItem>
-                                    {statusOptions.map(option => (
-                                        <MenuItem key={option.id} value={option.id}>
-                                            {option.descricao}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
 
-                                <FormControlLabel
-                                    label="Uso Veterinário"
-                                    style={{ width: '100%' }}
-                                    control={
-                                        <Checkbox
-                                            id="usoVeterinario"
-                                            name="usoVeterinario"
-                                            checked={newItem.usoVeterinario || false}
-                                            color="primary" value="true"
-                                            onChange={e => this.setState({ newItem: { ...newItem, usoVeterinario: e.target.checked } })}
-                                        />
-                                    }
-                                />
-
-                            </DialogContent>
-                            <DialogActions>
-                                <Button variant="contained" fullWidth size="large" type="submit" color="primary" disabled={this.sending}>Enviar</Button>
-                                <Button variant="outlined" fullWidth size="large" disabled={this.sending} onClick={this.dialogToggle}>Cancelar</Button>
-                            </DialogActions>
-                        </form>
-                    </Dialog>
                 </main>
             </>
         );
     }
-}
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />
 }
 
 export default withLogin(MedicinesView);

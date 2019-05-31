@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import { MuiThemeProvider } from '@material-ui/core';
 import 'typeface-roboto'
+import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 
 import { theme } from './settings'
-import UpdateHandler from './components/UpdateHandler'
-import { HashRouter as Router, Switch, Route } from 'react-router-dom'
-import Home from './components/views/Home';
-import About from './components/views/About';
-import News from './components/views/News';
-import NewsSingle from './components/views/NewsSingle';
-import PontosApoio from './components/views/PontosApoio';
-import MedicinesView from './components/views/Medicines';
-import { AuthContextProvider } from './lib/authContext';
-import { SdkContextProvider } from './lib/sdkContext';
-import UsersView from './components/views/Users';
-import NotFound from './components/views/NotFound';
-import UserForm from './components/views/UserForm';
+import UpdateHandler from 'components/UpdateHandler'
+import Home from 'components/views/Home';
+import About from 'components/views/About';
+import News from 'components/views/News';
+import NewsSingle from 'components/views/NewsSingle';
+import PontosApoio from 'components/views/PontosApoio';
+import MedicinesView from 'components/views/Medicines';
+import { AuthContextProvider } from 'lib/authContext';
+import { SdkContextProvider } from 'lib/sdkContext';
+import UsersView from 'components/views/Users';
+import NotFound from 'components/views/NotFound';
+import UserForm from 'components/views/UserForm';
 
 class App extends Component {
     render() {
