@@ -1,15 +1,17 @@
 # Farmácia Solidária
 
-Frontend projeto farmácia solidária
+Frontend projeto farmácia solidária.
 
-## Installation
+## Instalação
+
+É recomendado o uso do `yarn` como gerenciador de pacotes.
 
 ```sh
     yarn install
     yarn start
 ```
 
-to deploy the project to GitHub Pages, run:
+Para fazer o deploy do projeto:
 
 ```sh
     yarn run deploy

@@ -50,7 +50,7 @@ class Header extends Component {
                         </div>
 
                         {title &&
-                            <Typography variant="title" color="inherit" className={classes.flex}>
+                            <Typography variant="h6" color="inherit" className={classes.flex}>
                                 {title}
                             </Typography>
                         }

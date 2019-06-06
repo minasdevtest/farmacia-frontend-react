@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, DialogContentText, CircularProgress } from '@material-ui/core';
 import { withAuth } from '../lib/authContext';
+import { Link } from 'react-router-dom'
 
 class LoginDialog extends Component {
     state = {
@@ -44,6 +45,7 @@ class LoginDialog extends Component {
                     <form onSubmit={isLogin ? this.onLogin : this.onRegister}>
                         <DialogTitle>{isLogin ? 'Identifique-se' : 'Registrar'}</DialogTitle>
                         <DialogContent>
+                            <Button size="small" component={Link} to="/">Voltar para Home</Button>
                             <TextField
                                 required
                                 autoFocus
@@ -71,7 +73,7 @@ class LoginDialog extends Component {
                                 onChange={e => this.setState({ password: e.target.value })}
                             />
 
-                            {!isLogin &&
+                            {!isLogin && <>
                                 <TextField
                                     required
                                     autoFocus
@@ -85,7 +87,29 @@ class LoginDialog extends Component {
                                     value={this.state.name}
                                     onChange={e => this.setState({ name: e.target.value })}
                                 />
-                            }
+
+                                <TextField
+                                    margin="dense"
+                                    id="cellphone"
+                                    name="cellphone"
+                                    label="Telefone Celular"
+                                    type="tel"
+                                    placeholder="(XX) XXXXX-XXXX"
+                                    fullWidth
+                                    disabled={loading}
+                                />
+
+                                <TextField
+                                    margin="dense"
+                                    id="phone"
+                                    name="phone"
+                                    label="Telefone Fixo"
+                                    type="tel"
+                                    placeholder="(XX) XXXX-XXXX"
+                                    fullWidth
+                                    disabled={loading}
+                                />
+                            </>}
 
                             {error &&
                                 <DialogContentText style={{ color: 'red' }}>{error.data}</DialogContentText>}

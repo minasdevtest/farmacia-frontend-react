@@ -16,6 +16,7 @@ import { SdkContextProvider } from 'lib/sdkContext';
 import UsersView from 'components/views/Users';
 import NotFound from 'components/views/NotFound';
 import UserForm from 'components/views/UserForm';
+import ContactView from 'components/views/ContactView';
 
 class App extends Component {
     render() {
@@ -33,6 +34,7 @@ class App extends Component {
                                     <Route exact path="/news/:id" component={NewsSingle} />
                                     <Route exact path="/place" component={PontosApoio} />
                                     <Route exact path="/medicine" component={MedicinesView} />
+                                    <Route exact path="/contact" component={ContactView} />
                                     <Route exact path="/user" component={UsersView} />
                                     <Route exact path="/me" component={UserForm} />
                                     <Route path="/" component={NotFound} />

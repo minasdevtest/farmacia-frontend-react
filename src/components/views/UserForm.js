@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, Button, TextField, Card, CardContent, CardActions } from '@material-ui/core';
+import { Typography as T, Button, TextField, Card, CardContent, CardActions, Container } from '@material-ui/core';
 import { withSdk } from '../../lib/sdkContext';
 import { withLogin } from '../LoginView';
 import { preventDefault } from '../../lib/util';
@@ -89,99 +89,116 @@ class UserForm extends Component {
         const fields = [
             ['name', 'Nome', { required: true }],
             ['email', 'Email', { required: true, type: 'email' }],
-            // ['password', 'Senha', { type: 'password', helperText: 'Deixe em branco para ser mantido', autoComplete: 'off' }],
+            ['cellphone', 'Telefone Celular', { type: 'tel', placeholder: '(XX) XXXXX-XXXX' }],
+            ['phone', 'Telefone Fixo', { type: 'tel', placeholder: '(XX) XXXX-XXXX' }],
         ]
 
         return (
             <>
                 <Header title="Dados Pessoais" backButton />
                 <main>
-                    {item && <>
-                        <form method="put" onSubmit={preventDefault(this.updateUser)}>
-                            <Card style={{ margin: 10 }}>
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5">Alterar informações pessoais</Typography>
+                    {item &&
+                        <Container>
+                            <form method="put" onSubmit={preventDefault(this.updateUser)}>
+                                <Card style={{ margin: "16px 0" }}>
+                                    <CardContent>
+                                        <T gutterBottom variant="h5">Alterar informações pessoais</T>
 
-                                    {fields.map(([field, label, args = {}, hidden], i) => !hidden &&
+                                        {fields.map(([field, label, args = {}, hidden], i) => !hidden &&
+                                            <TextField
+                                                key={field}
+                                                autoFocus={i === 0}
+                                                margin="dense"
+                                                id={field}
+                                                name={field}
+                                                label={label}
+                                                value={item[field] || ''}
+                                                onChange={e => this.setState({ item: { ...item, [field]: e.target.value } })}
+                                                type="text"
+                                                fullWidth
+                                                disabled={sending}
+                                                {...args}
+                                            />
+                                        )}
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button disabled={sending} variant="contained" fullWidth size="large" type="submit" color="primary">Salvar</Button>
+                                    </CardActions>
+                                </Card>
+                            </form>
+
+                            <Card style={{ margin: "16px 0" }}>
+                                <CardContent>
+                                    <T gutterBottom variant="h5">Endereços</T>
+                                    <T>Cadastre endereços para busca de medicamentos em casa.</T>
+
+                                    <div>
+                                        <T color="textSecondary" style={{ margin: '20px 0' }} align="center">Nenhum endereço cadastrado.</T>
+                                    </div>
+
+                                </CardContent>
+                                <CardActions>
+                                    <Button disabled={sending} variant="contained" fullWidth size="large" color="primary">Cadastrar Endereço</Button>
+                                </CardActions>
+                            </Card>
+
+
+                            <form method="put" autoComplete="off" onSubmit={preventDefault(this.changePassword)}>
+                                <Card style={{ margin: "16px 0" }}>
+                                    <CardContent>
+                                        <T gutterBottom variant="h5">Alterar Senha</T>
+
                                         <TextField
-                                            key={field}
-                                            autoFocus={i === 0}
                                             margin="dense"
-                                            id={field}
-                                            name={field}
-                                            label={label}
-                                            value={item[field] || ''}
-                                            onChange={e => this.setState({ item: { ...item, [field]: e.target.value } })}
-                                            type="text"
+                                            id="new-password"
+                                            name="new-password"
+                                            label="Nova Senha"
+                                            type="password"
                                             fullWidth
+                                            required
                                             disabled={sending}
-                                            {...args}
+                                            value={passwordChange.password}
+                                            onChange={e => this.setState({ passwordChange: { ...passwordChange, password: e.target.value } })}
                                         />
-                                    )}
 
-                                </CardContent>
-                                <CardActions>
-                                    <Button disabled={sending} variant="contained" fullWidth size="large" type="submit" color="primary">Salvar</Button>
-                                </CardActions>
-                            </Card>
-                        </form>
+                                        <TextField
+                                            margin="dense"
+                                            id="new-password-confirm"
+                                            name="new-password-confirm"
+                                            label="Confirmar nova senha"
+                                            type="password"
+                                            fullWidth required
+                                            disabled={sending}
+                                            value={passwordChange.confirmation}
+                                            onChange={e => this.setState({ passwordChange: { ...passwordChange, confirmation: e.target.value } })}
+                                            error={error && error.confirmation}
+                                            helperText={error && error.confirmation && 'Senha diferente!'}
+                                        />
 
-                        <form method="put" autoComplete="off" onSubmit={preventDefault(this.changePassword)}>
-                            <Card style={{ margin: 10 }}>
+                                    </CardContent>
+                                    <CardActions>
+                                        <Button disabled={sending} variant="contained" fullWidth size="large" type="submit" color="primary">Alterar Senha</Button>
+                                    </CardActions>
+                                </Card>
+                            </form>
+
+                            <Card style={{ margin: "16px 0" }}>
                                 <CardContent>
-                                    <Typography gutterBottom variant="h5">Alterar Senha</Typography>
-
-                                    <TextField
-                                        margin="dense"
-                                        id="new-password"
-                                        name="new-password"
-                                        label="Nova Senha"
-                                        type="password"
-                                        fullWidth
-                                        required
-                                        disabled={sending}
-                                        value={passwordChange.password}
-                                        onChange={e => this.setState({ passwordChange: { ...passwordChange, password: e.target.value } })}
-                                    />
-
-                                    <TextField
-                                        margin="dense"
-                                        id="new-password-confirm"
-                                        name="new-password-confirm"
-                                        label="Confirmar nova senha"
-                                        type="password"
-                                        fullWidth required
-                                        disabled={sending}
-                                        value={passwordChange.confirmation}
-                                        onChange={e => this.setState({ passwordChange: { ...passwordChange, confirmation: e.target.value } })}
-                                        error={error && error.confirmation}
-                                        helperText={error && error.confirmation && 'Senha diferente!'}
-                                    />
+                                    <T gutterBottom variant="h5">Deletar conta</T>
+                                    <T gutterBottom>Esta ação é irreversível</T>
 
                                 </CardContent>
                                 <CardActions>
-                                    <Button disabled={sending} variant="contained" fullWidth size="large" type="submit" color="primary">Alterar Senha</Button>
+                                    <Button
+                                        variant="contained"
+                                        fullWidth
+                                        size="large"
+                                        color="primary"
+                                        disabled={sending}
+                                        onClick={this.deleteUser}>Deletar minha conta</Button>
                                 </CardActions>
                             </Card>
-                        </form>
-
-                        <Card style={{ margin: 10 }}>
-                            <CardContent>
-                                <Typography gutterBottom variant="h5">Deletar conta</Typography>
-                                <Typography gutterBottom>Esta ação é irreversível</Typography>
-
-                            </CardContent>
-                            <CardActions>
-                                <Button
-                                    variant="contained"
-                                    fullWidth
-                                    size="large"
-                                    color="primary"
-                                    disabled={sending}
-                                    onClick={this.deleteUser}>Deletar minha conta</Button>
-                            </CardActions>
-                        </Card>
-                    </>}
+                        </Container>}
                 </main>
             </>
         );

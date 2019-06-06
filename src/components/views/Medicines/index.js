@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, CircularProgress, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton } from '@material-ui/core';
+import { Typography, CircularProgress, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon } from '@material-ui/icons';
 
 import { dateFormated } from 'lib/util'
@@ -11,6 +11,7 @@ import { WithRoles } from 'lib/authHOC';
 import MedicineEditDialog from './MedicineEditDialog';
 import MedicineDetails from './MedicineDetails';
 import MedicineRequestDetails from './MedicineRequestDetails';
+import MedicineDelete from './MedicineDelete';
 
 class MedicinesView extends Component {
     constructor(props) {
@@ -23,9 +24,11 @@ class MedicinesView extends Component {
             newItemOpen: false,
             editItemId: null,
             sending: false,
-            deleting: false,
             statusOptions: [],
             typesOptions: [],
+
+            item: null,
+            action: '',
             // notificações
             requestDetails: null
         }
@@ -40,6 +43,10 @@ class MedicinesView extends Component {
     get sdk() {
         return FarmaSdk.instance()
     }
+
+    setAction = (item = null, action = '') => this.setState({ item, action })
+
+    resetAction = () => this.setState({ action: '' })
 
     load = () => {
         this.setState({ loading: true })
@@ -97,25 +104,25 @@ class MedicinesView extends Component {
             .then(requestDetails => this.setState({ sending: false, itemDetails: null, requestDetails }))
     }
 
-    deleteItem = id => {
-        if (this.state.deleting)
+    deleteItem = ({ id }, reason) => {
+        if (this.state.sending)
             return;
-        this.setState({ deleting: true })
         const items = [...this.state.items]
         const index = items.findIndex(({ id: itemId }) => id === itemId)
         items.splice(index, 1)
-        this.sdk.deleteMedicine(id)
+        this.setState({ sending: true })
+        this.sdk.deleteMedicine(id, reason)
             .then(() => this.setState({ items }))
             .catch(error => console.error(error) || this.setState({ error }))
-            .then(() => this.setState({ deleting: false }))
+            .then(() => this.setState({ sending: false, action: '' }))
     }
 
     render() {
-        const { requestDetails, newItemOpen, newItem, itemDetails, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
+        const { item, action, requestDetails, newItemOpen, newItem, itemDetails, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
 
         return (
             <>
-                <Header title="Pontos de Apoio" backButton />
+                <Header title="Medicamentos" backButton />
                 <main>
                     {loading ?
                         <CircularProgress /> :
@@ -125,7 +132,7 @@ class MedicinesView extends Component {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell padding="dense">Lote</TableCell>
+                                            <TableCell padding="checkbox">Lote</TableCell>
                                             <TableCell>Nome</TableCell>
                                             <TableCell style={{ width: 60 }}>Status</TableCell>
                                             <TableCell align="right" padding="none">Qtd.</TableCell>
@@ -137,7 +144,7 @@ class MedicinesView extends Component {
                                     <TableBody>
                                         {items.map(item =>
                                             <TableRow key={item.lote}>
-                                                <TableCell padding="dense">
+                                                <TableCell padding="checkbox">
                                                     <small>{item.lote}</small>
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
@@ -177,7 +184,7 @@ class MedicinesView extends Component {
                                                         })} color="secondary">
                                                             <EditIcon />
                                                         </IconButton>
-                                                        <IconButton disabled={this.state.deleting} onClick={() => this.deleteItem(item.id)}>
+                                                        <IconButton disabled={this.state.sending} onClick={() => this.setAction(item, 'delete')}>
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </WithRoles>
@@ -192,27 +199,49 @@ class MedicinesView extends Component {
                                             </TableRow>
                                         )}
                                     </TableBody>
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TablePagination
+                                                colSpan={7}
+                                                rowsPerPage={8}
+                                                count={50}
+                                                page={0}
+                                                rowsPerPageOptions={[]}
+                                                labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+                                                onChangePage={console.log}
+                                            />
+                                        </TableRow>
+                                    </TableFooter>
                                 </Table>
                             </Paper>
                     }
 
-                    <WithRoles roles="admin">
+                    <WithRoles roles="admin" callback={() => <>
                         <Fab color="primary" title="Adicionar" aria-label="Adicionar"
                             onClick={this.dialogToggle}
                             style={{ position: 'sticky', bottom: 16, right: 16, float: 'right', margin: 16 }}>
                             <AddIcon />
                         </Fab>
-                    </WithRoles>
 
-                    <MedicineEditDialog
-                        open={newItemOpen}
-                        onClose={this.dialogToggle}
-                        onSubmit={this.createItem}
-                        editing={Boolean(editItemId)}
-                        item={newItem}
-                        onFieldChange={(field, value) => this.setState({ newItem: { ...newItem, [field]: value } })}
-                        {...{ typesOptions, statusOptions, sending }}
-                    />
+                        <MedicineEditDialog
+                            open={newItemOpen}
+                            onClose={this.dialogToggle}
+                            onSubmit={this.createItem}
+                            editing={Boolean(editItemId)}
+                            item={newItem}
+                            onFieldChange={(field, value) => this.setState({ newItem: { ...newItem, [field]: value } })}
+                            {...{ typesOptions, statusOptions, sending }}
+                        />
+
+                        <MedicineDelete
+                            item={item}
+                            open={action === 'delete'}
+                            loading={sending}
+                            onClose={this.resetAction}
+                            onDelete={this.deleteItem}
+                        />
+
+                    </>} />
 
                     <WithRoles roles="user" callback={() => <>
                         <MedicineDetails
@@ -228,9 +257,6 @@ class MedicinesView extends Component {
                             request={requestDetails}
                         />
                     </>} />
-
-
-
 
                 </main>
             </>

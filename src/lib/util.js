@@ -12,7 +12,7 @@
 export function preventDefault(fn) {
     return e => {
         if (e && e.preventDefault) e.preventDefault()
-        return fn()
+        return fn && fn()
     }
 }
 
@@ -29,3 +29,9 @@ export const dateFormated = date => date
  * @param {Number} [time=1000] time to wait 
  */
 export const waitPromise = (time = 1000) => new Promise(resolve => setTimeout(resolve, time))
+
+/**
+ * HOF to extract value from event
+ * @param {Function} fn to be called
+ */
+export const getValue = fn => (e => fn(e.target.value))

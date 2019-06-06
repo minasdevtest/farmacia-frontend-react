@@ -108,10 +108,10 @@ export default class FarmaSdk extends BaseModule {
 
     updateMedicine = (item, id) => this.fetch(`/medicine/${id}`, item, 'put')
 
-    deleteMedicine(id) {
+    deleteMedicine(id, reason) {
         // TODO: support delete
         // return this.fetch(`/medicine/${id}`, null, { method: 'delete' })
-        return Promise.resolve()
+        return waitPromise()
     }
 
     requestMedicine() {

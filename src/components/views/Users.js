@@ -83,7 +83,9 @@ class UsersView extends Component {
             ['name', 'Nome', { required: true }],
             ['email', 'Email', { required: true, type: 'email' }],
             ['password', 'Senha', { required: true, type: 'password' }],
-        ]
+            ['cellphone', 'Telefone Celular', { type: 'tel', placeholder: '(XX) XXXXX-XXXX' }],
+            ['phone', 'Telefone Fixo', { type: 'tel', placeholder: '(XX) XXXX-XXXX' }],
+          ]
 
         return (
             <>
@@ -97,7 +99,7 @@ class UsersView extends Component {
                                 <Table>
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell padding="dense">Nome</TableCell>
+                                            <TableCell padding="checkbox">Nome</TableCell>
                                             <TableCell>Email</TableCell>
                                             <TableCell padding="none">permissões</TableCell>
                                             <TableCell style={{ width: 100 }}>Ações</TableCell>
@@ -106,7 +108,7 @@ class UsersView extends Component {
                                     <TableBody>
                                         {items.map(item =>
                                             <TableRow key={item._id}>
-                                                <TableCell padding="dense">
+                                                <TableCell padding="checkbox">
                                                     <small>{item.name}</small>
                                                 </TableCell>
                                                 <TableCell component="th" scope="row">
