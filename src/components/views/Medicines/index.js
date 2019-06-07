@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Typography, CircularProgress, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter } from '@material-ui/core';
-import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon } from '@material-ui/icons';
+import { Typography as T, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter, Container, Divider, InputBase } from '@material-ui/core';
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon, Search as SearchIcon, Close } from '@material-ui/icons';
 
-import { dateFormated } from 'lib/util'
+import { dateFormated, preventDefault } from 'lib/util'
 
 import Header from 'components/Header';
 import FarmaSdk from 'lib/farmaSDK'
@@ -12,6 +12,7 @@ import MedicineEditDialog from './MedicineEditDialog';
 import MedicineDetails from './MedicineDetails';
 import MedicineRequestDetails from './MedicineRequestDetails';
 import MedicineDelete from './MedicineDelete';
+import Loader from 'components/Loader';
 
 class MedicinesView extends Component {
     constructor(props) {
@@ -59,9 +60,7 @@ class MedicinesView extends Component {
             .then(() => this.setState({ loading: false }))
     }
 
-    componentDidMount() {
-        this.load()
-    }
+    componentDidMount = () => this.load()
 
     dialogToggle = () => this.setState({
         newItemOpen: !this.state.newItemOpen,
@@ -125,95 +124,109 @@ class MedicinesView extends Component {
                 <Header title="Medicamentos" backButton />
                 <main>
                     {loading ?
-                        <CircularProgress /> :
+                        <Loader /> :
                         !items.length ?
-                            <Typography align="center">Lista vazia</Typography> :
-                            <Paper style={{ margin: 10, overflow: 'auto' }}>
-                                <Table>
-                                    <TableHead>
-                                        <TableRow>
-                                            <TableCell padding="checkbox">Lote</TableCell>
-                                            <TableCell>Nome</TableCell>
-                                            <TableCell style={{ width: 60 }}>Status</TableCell>
-                                            <TableCell align="right" padding="none">Qtd.</TableCell>
-                                            <TableCell>Lab.</TableCell>
-                                            <TableCell padding="none">Detalhes</TableCell>
-                                            <TableCell style={{ width: 100 }}>Ações</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {items.map(item =>
-                                            <TableRow key={item.lote}>
-                                                <TableCell padding="checkbox">
-                                                    <small>{item.lote}</small>
-                                                </TableCell>
-                                                <TableCell component="th" scope="row">
-                                                    {item.nomeComercial}<br />
-                                                    <small>{item.principioAtivo}</small>
-                                                </TableCell>
-
-                                                <TableCell>
-                                                    {item.status.descricao}
-                                                </TableCell>
-
-                                                <TableCell align="right" padding="none">
-                                                    {(item.estoque && item.estoque.quantidade) || 'N/A'}
-                                                </TableCell>
-
-                                                <TableCell>
-                                                    {item.laboratorio}
-                                                </TableCell>
-
-                                                <TableCell padding="none">
-                                                    <b>Dosagem: </b>{item.dosagem}<br />
-                                                    {item.tipo.descricao}<br />
-                                                    <b>Vencimento: </b>
-                                                    {dateFormated(item.dataVencimento)}
-                                                </TableCell>
-
-                                                <TableCell>
-                                                    <WithRoles roles="admin">
-                                                        <IconButton onClick={() => this.setState({
-                                                            newItem: {
-                                                                ...item,
-                                                                valorEstoque: item.estoque.quantidade,
-                                                                status: item.status && item.status.id,
-                                                                tipo: item.tipo && item.tipo.id,
-                                                            }, newItemOpen: true,
-                                                            editItemId: item.lote
-                                                        })} color="secondary">
-                                                            <EditIcon />
-                                                        </IconButton>
-                                                        <IconButton disabled={this.state.sending} onClick={() => this.setAction(item, 'delete')}>
-                                                            <DeleteIcon />
-                                                        </IconButton>
-                                                    </WithRoles>
-
-                                                    <WithRoles roles="user">
-                                                        <IconButton onClick={() => this.setState({ itemDetails: item })} color="primary">
-                                                            <PlusIcon />
-                                                        </IconButton>
-                                                    </WithRoles>
-                                                </TableCell>
-
+                            <T align="center">Lista vazia</T> :
+                            <Container>
+                                <form onSubmit={preventDefault()} style={{ margin: '10px 0', display: 'flex', justifyContent: 'flex-end', }}>
+                                    <Paper style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}>
+                                        <InputBase placeholder="Pesquisar..." />
+                                        <IconButton style={{ padding: 10, margin: 2 }}>
+                                            <SearchIcon />
+                                        </IconButton>
+                                        <Divider style={{ width: 1, height: 28 }} />
+                                        <IconButton disabled style={{ padding: 10, margin: 2 }}>
+                                            <Close />
+                                        </IconButton>
+                                    </Paper>
+                                </form>
+                                <Paper style={{ overflow: 'auto' }}>
+                                    <Table>
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell padding="checkbox">Lote</TableCell>
+                                                <TableCell>Nome</TableCell>
+                                                <TableCell style={{ width: 60 }}>Status</TableCell>
+                                                <TableCell align="right" padding="none">Qtd.</TableCell>
+                                                <TableCell>Lab.</TableCell>
+                                                <TableCell padding="none">Detalhes</TableCell>
+                                                <TableCell style={{ width: 100 }}>Ações</TableCell>
                                             </TableRow>
-                                        )}
-                                    </TableBody>
-                                    <TableFooter>
-                                        <TableRow>
-                                            <TablePagination
-                                                colSpan={7}
-                                                rowsPerPage={8}
-                                                count={50}
-                                                page={0}
-                                                rowsPerPageOptions={[]}
-                                                labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
-                                                onChangePage={console.log}
-                                            />
-                                        </TableRow>
-                                    </TableFooter>
-                                </Table>
-                            </Paper>
+                                        </TableHead>
+                                        <TableBody>
+                                            {items.map(item =>
+                                                <TableRow key={item.lote}>
+                                                    <TableCell padding="checkbox">
+                                                        <small>{item.lote}</small>
+                                                    </TableCell>
+                                                    <TableCell component="th" scope="row">
+                                                        {item.nomeComercial}<br />
+                                                        <small>{item.principioAtivo}</small>
+                                                    </TableCell>
+
+                                                    <TableCell>
+                                                        {item.status.descricao}
+                                                    </TableCell>
+
+                                                    <TableCell align="right" padding="none">
+                                                        {(item.estoque && item.estoque.quantidade) || 'N/A'}
+                                                    </TableCell>
+
+                                                    <TableCell>
+                                                        {item.laboratorio}
+                                                    </TableCell>
+
+                                                    <TableCell padding="none">
+                                                        <b>Dosagem: </b>{item.dosagem}<br />
+                                                        {item.tipo.descricao}<br />
+                                                        <b>Vencimento: </b>
+                                                        {dateFormated(item.dataVencimento)}
+                                                    </TableCell>
+
+                                                    <TableCell>
+                                                        <WithRoles roles="admin">
+                                                            <IconButton onClick={() => this.setState({
+                                                                newItem: {
+                                                                    ...item,
+                                                                    valorEstoque: item.estoque.quantidade,
+                                                                    status: item.status && item.status.id,
+                                                                    tipo: item.tipo && item.tipo.id,
+                                                                }, newItemOpen: true,
+                                                                editItemId: item.lote
+                                                            })} color="secondary">
+                                                                <EditIcon />
+                                                            </IconButton>
+                                                            <IconButton disabled={this.state.sending} onClick={() => this.setAction(item, 'delete')}>
+                                                                <DeleteIcon />
+                                                            </IconButton>
+                                                        </WithRoles>
+
+                                                        <WithRoles roles="user">
+                                                            <IconButton onClick={() => this.setState({ itemDetails: item })} color="primary">
+                                                                <PlusIcon />
+                                                            </IconButton>
+                                                        </WithRoles>
+                                                    </TableCell>
+
+                                                </TableRow>
+                                            )}
+                                        </TableBody>
+                                        <TableFooter>
+                                            <TableRow>
+                                                <TablePagination
+                                                    colSpan={7}
+                                                    rowsPerPage={8}
+                                                    count={50}
+                                                    page={0}
+                                                    rowsPerPageOptions={[]}
+                                                    labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+                                                    onChangePage={console.log}
+                                                />
+                                            </TableRow>
+                                        </TableFooter>
+                                    </Table>
+                                </Paper>
+                            </Container>
                     }
 
                     <WithRoles roles="admin" callback={() => <>

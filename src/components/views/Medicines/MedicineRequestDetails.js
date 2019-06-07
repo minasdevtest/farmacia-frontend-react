@@ -15,7 +15,9 @@ export default function MedicineRequestDetails({ request, onClose, ...props }) {
                 <p>Não se esqueca de levar a receita.</p>
             </DialogContent>
             <DialogActions>
-                <Button fullWidth variant="contained" color="primary" onClick={onClose}>Entendi !</Button>
+                <Button fullWidth variant="contained" color="primary" onClick={onClose}>Entendi</Button>
+                <Button fullWidth variant="outlined" color="secondary" component="a"
+                    href="https://goo.gl/maps/JPUxSEo2YEpoRCHt8" target="_blank">Ver no mapa</Button>
             </DialogActions>
         </Dialog>
     )

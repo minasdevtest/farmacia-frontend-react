@@ -32,6 +32,26 @@ export default function MedicineEditDialog({ onSubmit, item, typesOptions, statu
                 <DialogContent>
                     <DialogContentText>Preencha os dados abaixo</DialogContentText>
 
+                    <TextField
+                        margin="dense"
+                        id="status"
+                        name="status"
+                        label="Status"
+                        variant="outlined"
+                        value={item.status || 'none'}
+                        onChange={e => onFieldChange('status', e.target.value)}
+                        select
+                        fullWidth>
+                        <MenuItem value="none" disabled>
+                            {statusOptions.length ? 'Selecione...' : 'Carregando...'}
+                        </MenuItem>
+                        {statusOptions.map(option => (
+                            <MenuItem key={option.id} value={option.id}>
+                                {option.descricao}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+
                     {fields.map(([field, label, args = {}, hidden], i) => !hidden &&
                         <TextField
                             key={field}
@@ -63,25 +83,6 @@ export default function MedicineEditDialog({ onSubmit, item, typesOptions, statu
                             {typesOptions.length ? 'Selecione...' : 'Carregando...'}
                         </MenuItem>
                         {typesOptions.map(option => (
-                            <MenuItem key={option.id} value={option.id}>
-                                {option.descricao}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-
-                    <TextField
-                        margin="dense"
-                        id="status"
-                        name="status"
-                        label="Status"
-                        value={item.status || 'none'}
-                        onChange={e => onFieldChange('status', e.target.value)}
-                        select
-                        fullWidth>
-                        <MenuItem value="none" disabled>
-                            {statusOptions.length ? 'Selecione...' : 'Carregando...'}
-                        </MenuItem>
-                        {statusOptions.map(option => (
                             <MenuItem key={option.id} value={option.id}>
                                 {option.descricao}
                             </MenuItem>

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide } from '@material-ui/core';
+import { Typography, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide } from '@material-ui/core';
 import FarmaSdk from '../../lib/farmaSDK'
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
 import { withLogin } from '../LoginView';
 import { WithRoles } from '../../lib/authHOC';
+import Loader from 'components/Loader';
 
 const fields = [
     ['nome', 'Nome do Local', { required: true }],
@@ -84,7 +85,7 @@ class PontosApoio extends Component {
                 <Header title="Pontos de Apoio" backButton />
                 <main>
                     {loading ?
-                        <CircularProgress /> :
+                        <Loader /> :
                         !items.length ?
                             <Typography align="center">Lista vazia</Typography> :
                             <Paper style={{ margin: 10, overflow: 'auto' }}>

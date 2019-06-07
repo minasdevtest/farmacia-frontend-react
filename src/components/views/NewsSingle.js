@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Card, CardContent, CardMedia } from '@material-ui/core';
+import { Typography, Card, CardContent, CardMedia } from '@material-ui/core';
 import FarmaSdk from '../../lib/farmaSDK'
+import Loader from 'components/Loader';
 
 class NewsSingle extends Component {
     constructor(props) {
@@ -37,7 +38,7 @@ class NewsSingle extends Component {
             <>
                 <Header title="Notícias" backButton />
                 <main>
-                    {this.state.loading ? <CircularProgress /> :
+                    {this.state.loading ? <Loader /> :
 
                         <Card component="article" style={{ maxWidth: 480, margin: '10px auto' }}>
 

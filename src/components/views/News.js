@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Card, CardContent, CardMedia, CardActionArea, Button } from '@material-ui/core';
+import { Typography, Card, CardContent, CardMedia, CardActionArea, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import FarmaSdk from '../../lib/farmaSDK'
 import { WithRoles } from '../../lib/authHOC';
+import Loader from 'components/Loader';
 
 /**
  * News Component
@@ -43,7 +44,7 @@ class News extends Component {
                     </WithRoles>
                 } />
                 <main>
-                    {this.state.loading ? <CircularProgress /> :
+                    {this.state.loading ? <Loader /> :
                         this.state.news.map(article =>
                             <Card component="article" key={article.id}
                                 style={{ maxWidth: 480, margin: '10px auto' }}>

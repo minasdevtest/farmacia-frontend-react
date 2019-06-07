@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, CircularProgress, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem } from '@material-ui/core';
+import { Typography, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
 import { withSdk } from '../../lib/sdkContext';
 import { withLogin } from '../LoginView';
+import Loader from 'components/Loader';
 
 /**
  *
@@ -92,7 +93,7 @@ class UsersView extends Component {
                 <Header title="Usuários" backButton />
                 <main>
                     {loading ?
-                        <CircularProgress /> :
+                        <Loader /> :
                         !items.length ?
                             <Typography align="center">Lista vazia</Typography> :
                             <Paper style={{ margin: 10, overflow: 'auto' }}>
