@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/farmacia-frontend-react/precache-manifest.75375e50abacc3156a3cfb21fdb75c9d.js"
+  "/farmacia-frontend-react/precache-manifest.69fe3d4e033e6b4b39c67bc9f73d58d3.js"
 );
 
 self.addEventListener('message', (event) => {

@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3476ef50bdf2e1fbd57e475a54b0e6ab",
+    "revision": "d6c2a3777e8c579f40b7314ac199d465",
     "url": "/farmacia-frontend-react/index.html"
   },
   {
-    "revision": "ee74870fb59cb4317bb8",
+    "revision": "2f2ccb3604b6f832b1e9",
     "url": "/farmacia-frontend-react/static/css/2.3015371f.chunk.css"
   },
   {
-    "revision": "0bdd11e610241b513b3c",
-    "url": "/farmacia-frontend-react/static/css/main.70b95e88.chunk.css"
+    "revision": "a84dee05822eb74000ec",
+    "url": "/farmacia-frontend-react/static/css/main.88101f86.chunk.css"
   },
   {
-    "revision": "ee74870fb59cb4317bb8",
-    "url": "/farmacia-frontend-react/static/js/2.93141e43.chunk.js"
+    "revision": "2f2ccb3604b6f832b1e9",
+    "url": "/farmacia-frontend-react/static/js/2.220aaa4d.chunk.js"
   },
   {
-    "revision": "0bdd11e610241b513b3c",
-    "url": "/farmacia-frontend-react/static/js/main.8b96c843.chunk.js"
+    "revision": "a84dee05822eb74000ec",
+    "url": "/farmacia-frontend-react/static/js/main.e8d3bb81.chunk.js"
   },
   {
     "revision": "b3ebb60628b87bb32fb0",

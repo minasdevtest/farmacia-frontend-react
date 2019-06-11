@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/farmacia-frontend-react/static/css/main.70b95e88.chunk.css",
-    "main.js": "/farmacia-frontend-react/static/js/main.8b96c843.chunk.js",
-    "main.js.map": "/farmacia-frontend-react/static/js/main.8b96c843.chunk.js.map",
+    "main.css": "/farmacia-frontend-react/static/css/main.88101f86.chunk.css",
+    "main.js": "/farmacia-frontend-react/static/js/main.e8d3bb81.chunk.js",
+    "main.js.map": "/farmacia-frontend-react/static/js/main.e8d3bb81.chunk.js.map",
     "runtime~main.js": "/farmacia-frontend-react/static/js/runtime~main.04f9b287.js",
     "runtime~main.js.map": "/farmacia-frontend-react/static/js/runtime~main.04f9b287.js.map",
     "static/css/2.3015371f.chunk.css": "/farmacia-frontend-react/static/css/2.3015371f.chunk.css",
-    "static/js/2.93141e43.chunk.js": "/farmacia-frontend-react/static/js/2.93141e43.chunk.js",
-    "static/js/2.93141e43.chunk.js.map": "/farmacia-frontend-react/static/js/2.93141e43.chunk.js.map",
+    "static/js/2.220aaa4d.chunk.js": "/farmacia-frontend-react/static/js/2.220aaa4d.chunk.js",
+    "static/js/2.220aaa4d.chunk.js.map": "/farmacia-frontend-react/static/js/2.220aaa4d.chunk.js.map",
     "index.html": "/farmacia-frontend-react/index.html",
-    "precache-manifest.75375e50abacc3156a3cfb21fdb75c9d.js": "/farmacia-frontend-react/precache-manifest.75375e50abacc3156a3cfb21fdb75c9d.js",
+    "precache-manifest.69fe3d4e033e6b4b39c67bc9f73d58d3.js": "/farmacia-frontend-react/precache-manifest.69fe3d4e033e6b4b39c67bc9f73d58d3.js",
     "service-worker.js": "/farmacia-frontend-react/service-worker.js",
     "static/css/2.3015371f.chunk.css.map": "/farmacia-frontend-react/static/css/2.3015371f.chunk.css.map",
-    "static/css/main.70b95e88.chunk.css.map": "/farmacia-frontend-react/static/css/main.70b95e88.chunk.css.map",
+    "static/css/main.88101f86.chunk.css.map": "/farmacia-frontend-react/static/css/main.88101f86.chunk.css.map",
     "static/media/index.css": "/farmacia-frontend-react/static/media/roboto-latin-900italic.bc833e72.woff"
   }
 }
