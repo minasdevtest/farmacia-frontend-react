@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, CircularProgress, Typography } from '@material-ui/core';
-import { dateFormated, preventDefault, getValue } from 'lib/util';
+import { dateFormated, preventDefault, getValue, useStateReset } from 'lib/util';
 
 export default function MedicineDelete({ item, loading, onClose, onDelete, ...props }) {
-    const [reason, setReason] = useState('')
+    const [reason, setReason] = useStateReset('', [item])
     return (
         <Dialog onClose={onClose} {...props}>
             <form style={{ textAlign: 'center', minWidth: 300 }}

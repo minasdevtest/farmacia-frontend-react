@@ -18,3 +18,13 @@ iframe, object, image, video {
 .wp-block-columns > * {
   flex: 1;
 }
+
+@keyframes heartbeat{
+  0%, 100% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.15)
+  }
+}

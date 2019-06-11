@@ -6,6 +6,7 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 import { theme } from './settings'
 import UpdateHandler from 'components/UpdateHandler'
 import Home from 'components/views/Home';
+// import Home from 'components/views/Home2';
 import About from 'components/views/About';
 import News from 'components/views/News';
 import NewsSingle from 'components/views/NewsSingle';

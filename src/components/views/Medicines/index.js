@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Typography as T, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter, Container, Divider, InputBase } from '@material-ui/core';
-import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon, Search as SearchIcon, Close } from '@material-ui/icons';
+import { Typography as T, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter, Container } from '@material-ui/core';
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon } from '@material-ui/icons';
 
-import { dateFormated, preventDefault } from 'lib/util'
+import { dateFormated } from 'lib/util'
 
 import Header from 'components/Header';
 import FarmaSdk from 'lib/farmaSDK'
@@ -13,6 +13,7 @@ import MedicineDetails from './MedicineDetails';
 import MedicineRequestDetails from './MedicineRequestDetails';
 import MedicineDelete from './MedicineDelete';
 import Loader from 'components/Loader';
+import SearchBar from 'components/SearchBar';
 
 class MedicinesView extends Component {
     constructor(props) {
@@ -27,7 +28,6 @@ class MedicinesView extends Component {
             sending: false,
             statusOptions: [],
             typesOptions: [],
-
             item: null,
             action: '',
             // notificações
@@ -60,6 +60,13 @@ class MedicinesView extends Component {
             .then(() => this.setState({ loading: false }))
     }
 
+    search = async search => {
+        this.setState({ loading: true })
+        const items = await this.sdk.medicines.search(search)
+        this.setState({ items, loading: false })
+    }
+
+
     componentDidMount = () => this.load()
 
     dialogToggle = () => this.setState({
@@ -91,7 +98,7 @@ class MedicinesView extends Component {
 
         this.setState({ sending: true })
         this.sdk.saveMedicine(item, editItemId)
-            .then(items => this.setState({ newItem: {}, editItemId: null, sending: false, newItemOpen: false }))
+            .then(() => this.setState({ newItem: {}, editItemId: null, sending: false, newItemOpen: false }))
             .then(this.load)
             .catch(error => this.setState({ error, sending: false }))
     }
@@ -123,23 +130,12 @@ class MedicinesView extends Component {
             <>
                 <Header title="Medicamentos" backButton />
                 <main>
-                    {loading ?
-                        <Loader /> :
-                        !items.length ?
-                            <T align="center">Lista vazia</T> :
-                            <Container>
-                                <form onSubmit={preventDefault()} style={{ margin: '10px 0', display: 'flex', justifyContent: 'flex-end', }}>
-                                    <Paper style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}>
-                                        <InputBase placeholder="Pesquisar..." />
-                                        <IconButton style={{ padding: 10, margin: 2 }}>
-                                            <SearchIcon />
-                                        </IconButton>
-                                        <Divider style={{ width: 1, height: 28 }} />
-                                        <IconButton disabled style={{ padding: 10, margin: 2 }}>
-                                            <Close />
-                                        </IconButton>
-                                    </Paper>
-                                </form>
+                    <Container>
+                        <SearchBar onSearch={this.search} />
+                        {loading ?
+                            <Loader /> :
+                            !items.length ?
+                                <T align="center">Lista vazia</T> :
                                 <Paper style={{ overflow: 'auto' }}>
                                     <Table>
                                         <TableHead>
@@ -188,7 +184,7 @@ class MedicinesView extends Component {
                                                             <IconButton onClick={() => this.setState({
                                                                 newItem: {
                                                                     ...item,
-                                                                    valorEstoque: item.estoque.quantidade,
+                                                                    valorEstoque: (item.estoque && item.estoque.quantidade) || 1,
                                                                     status: item.status && item.status.id,
                                                                     tipo: item.tipo && item.tipo.id,
                                                                 }, newItemOpen: true,
@@ -226,8 +222,9 @@ class MedicinesView extends Component {
                                         </TableFooter>
                                     </Table>
                                 </Paper>
-                            </Container>
-                    }
+                        }
+                    </Container>
+
 
                     <WithRoles roles="admin" callback={() => <>
                         <Fab color="primary" title="Adicionar" aria-label="Adicionar"

@@ -124,7 +124,18 @@ export default class FarmaSdk extends BaseModule {
             endDate: (new Date()).getTime() + 1000 * 60 * 60 * 24 * 5,
             amount,
             id
-        }))
+        })),
+        /**
+         * TODO: unmock
+         *
+         * @param {string} [value='']
+         */
+        search: (value = '') => this
+            .medicine()
+            .then(items => items.filter(({ nomeComercial, principioAtivo }) =>
+                (nomeComercial.search(new RegExp(value, 'ig')) !== -1) ||
+                (principioAtivo.search(new RegExp(value, 'ig')) !== -1)
+            ))
     }
 
     //Users

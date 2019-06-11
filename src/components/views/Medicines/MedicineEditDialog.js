@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import Header from 'components/Header';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, MenuItem, FormControlLabel, Checkbox } from '@material-ui/core';
 import { Close as CloseIcon } from '@material-ui/icons';
@@ -96,7 +96,7 @@ export default function MedicineEditDialog({ onSubmit, item, typesOptions, statu
                             <Checkbox
                                 id="usoVeterinario"
                                 name="usoVeterinario"
-                                checked={item.usoVeterinario || false}
+                                checked={item.usoVeterinario === 'S'}
                                 color="primary" value="true"
                                 onChange={e => onFieldChange('usoVeterinario', e.target.checked)}
                             />
@@ -113,6 +113,6 @@ export default function MedicineEditDialog({ onSubmit, item, typesOptions, statu
     )
 }
 
-function Transition(props) {
-    return <Slide direction="up" {...props} />
-}
+const Transition = forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />
+})

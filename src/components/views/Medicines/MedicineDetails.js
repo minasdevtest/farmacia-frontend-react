@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, CircularProgress } from '@material-ui/core';
-import { dateFormated, preventDefault } from 'lib/util';
+import { dateFormated, preventDefault, useStateReset } from 'lib/util';
 
 export default function MedicineDetails({ item, loading, onClose, onRequest, ...props }) {
-    const [amount, setAmount] = useState('1')
+    const [amount, setAmount] = useStateReset('1', [item])
     return (
         <Dialog onClose={onClose} {...props}>
             <form style={{ textAlign: 'center' }}

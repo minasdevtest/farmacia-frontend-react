@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 /**
  * Utilities
  */
@@ -35,3 +37,20 @@ export const waitPromise = (time = 1000) => new Promise(resolve => setTimeout(re
  * @param {Function} fn to be called
  */
 export const getValue = fn => (e => fn(e.target.value))
+
+/**
+ * Resetable useState
+ * 
+ * Automatically resets to initial value when some prop change
+ *
+ * @export
+ * @param {any} initialState
+ * @param {Array} input Inputs to check
+ * @returns {Array} state methods
+ */
+export function useStateReset(initialState, input) {
+    const [state, setState] = useState(initialState)
+    const resetState = () => setState(initialState)
+    useEffect(resetState, input)
+    return [state, setState]
+}
