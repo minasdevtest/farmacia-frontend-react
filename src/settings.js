@@ -1,6 +1,6 @@
 import { createMuiTheme } from "@material-ui/core";
 import {
-    deepOrange as primary, // Primary color
+    red as primary, // Primary color
     grey as secondary, // Primary color
 } from '@material-ui/core/colors'
 

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Typography as T, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter, Container } from '@material-ui/core';
-import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon } from '@material-ui/icons';
+import { Typography as T, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter, Container, Button, TextField } from '@material-ui/core';
+import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon, FilterList as FilterIcon } from '@material-ui/icons';
 
 import { dateFormated } from 'lib/util'
 
@@ -131,11 +131,21 @@ class MedicinesView extends Component {
                 <Header title="Medicamentos" backButton />
                 <main>
                     <Container>
-                        <SearchBar onSearch={this.search} />
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <IconButton color="primary">
+                                <FilterIcon />
+                            </IconButton>
+                            <SearchBar onSearch={this.search} />
+                        </div>
                         {loading ?
                             <Loader /> :
                             !items.length ?
-                                <T align="center">Lista vazia</T> :
+                                <div style={{ textAlign: 'center', margin: 'calc(50vh - 150px) 0' }}>
+                                    <T gutterBottom>Nenhum Medicamento Encontrado</T>
+                                    <WithRoles roles="admin" callback={() =>
+                                        <Button onClick={this.dialogToggle} color="primary" variant="contained" size="large">Cadastre um novo medicamento</Button>
+                                    } />
+                                </div> :
                                 <Paper style={{ overflow: 'auto' }}>
                                     <Table>
                                         <TableHead>
