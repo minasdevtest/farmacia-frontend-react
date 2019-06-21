@@ -128,13 +128,14 @@ export default class FarmaSdk extends BaseModule {
         /**
          * TODO: unmock
          *
-         * @param {string} [value='']
+         * @param {string} [search='']
+         * @param {Object} [filter='']
          */
-        search: (value = '') => this
+        get: (search = '', filter = {}) => this
             .medicine()
             .then(items => items.filter(({ nomeComercial, principioAtivo }) =>
-                (nomeComercial.search(new RegExp(value, 'ig')) !== -1) ||
-                (principioAtivo.search(new RegExp(value, 'ig')) !== -1)
+                (nomeComercial.search(new RegExp(search, 'ig')) !== -1) ||
+                (principioAtivo.search(new RegExp(search, 'ig')) !== -1)
             ))
     }
 

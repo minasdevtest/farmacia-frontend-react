@@ -54,3 +54,7 @@ export function useStateReset(initialState, input) {
     useEffect(resetState, input)
     return [state, setState]
 }
+
+export function toggleState(instance, prop) {
+    return () => instance.setState({ [prop]: !instance.state[prop] })
+}

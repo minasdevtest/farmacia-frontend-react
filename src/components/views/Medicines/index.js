@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Typography as T, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter, Container, Button, TextField } from '@material-ui/core';
+import { Typography as T, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, IconButton, TablePagination, TableFooter, Container, Button } from '@material-ui/core';
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, AddCircle as PlusIcon, FilterList as FilterIcon } from '@material-ui/icons';
 
-import { dateFormated } from 'lib/util'
+import { dateFormated, toggleState } from 'lib/util'
 
 import Header from 'components/Header';
 import FarmaSdk from 'lib/farmaSDK'
@@ -14,6 +14,7 @@ import MedicineRequestDetails from './MedicineRequestDetails';
 import MedicineDelete from './MedicineDelete';
 import Loader from 'components/Loader';
 import SearchBar from 'components/SearchBar';
+import MedicineFilter from './MedicineFilter';
 
 class MedicinesView extends Component {
     constructor(props) {
@@ -30,6 +31,8 @@ class MedicinesView extends Component {
             typesOptions: [],
             item: null,
             action: '',
+            filterOpen: false,
+            search: '',
             // notificações
             requestDetails: null
         }
@@ -52,18 +55,22 @@ class MedicinesView extends Component {
     load = () => {
         this.setState({ loading: true })
         Promise.all([
-            this.sdk.medicine().then(items => this.setState({ items, loading: false })),
+            this.fetchItems(),
             this.sdk.medicineStatus().then(statusOptions => this.setState({ statusOptions })),
             this.sdk.medicineTypes().then(typesOptions => this.setState({ typesOptions })),
         ])
             .catch(error => console.error(error) || this.setState({ error }))
-            .then(() => this.setState({ loading: false }))
     }
 
-    search = async search => {
+    fetchItems = async () => {
+        const { search, filter } = this.state
         this.setState({ loading: true })
-        const items = await this.sdk.medicines.search(search)
+        const items = await this.sdk.medicines.get(search, filter)
         this.setState({ items, loading: false })
+    }
+
+    filter = async filter => {
+
     }
 
 
@@ -124,7 +131,7 @@ class MedicinesView extends Component {
     }
 
     render() {
-        const { item, action, requestDetails, newItemOpen, newItem, itemDetails, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
+        const { filterOpen, item, action, requestDetails, newItemOpen, newItem, itemDetails, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
 
         return (
             <>
@@ -132,10 +139,10 @@ class MedicinesView extends Component {
                 <main>
                     <Container>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <IconButton color="primary">
+                            <IconButton color="primary" onClick={toggleState(this, 'filterOpen')}>
                                 <FilterIcon />
                             </IconButton>
-                            <SearchBar onSearch={this.search} />
+                            <SearchBar onSearch={search => this.setState({ search }, this.fetchItems)} />
                         </div>
                         {loading ?
                             <Loader /> :
@@ -278,10 +285,14 @@ class MedicinesView extends Component {
                         />
                     </>} />
 
+                    <MedicineFilter
+                        status={statusOptions}
+                        types={typesOptions}
+                        open={filterOpen}
+                        onApply={filter => this.setState({ filter, filterOpen: false }, this.fetchItems)} />
                 </main>
             </>
         );
     }
 }
-
 export default withLogin(MedicinesView);
