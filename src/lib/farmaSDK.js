@@ -131,12 +131,19 @@ export default class FarmaSdk extends BaseModule {
          * @param {string} [search='']
          * @param {Object} [filter='']
          */
-        get: (search = '', filter = {}) => this
-            .medicine()
-            .then(items => items.filter(({ nomeComercial, principioAtivo }) =>
-                (nomeComercial.search(new RegExp(search, 'ig')) !== -1) ||
-                (principioAtivo.search(new RegExp(search, 'ig')) !== -1)
-            ))
+        get: ({ search = '', filter: { usoVeterinario, lote = '', status = [], tipo = [] } = {} }) =>
+            console.log({ usoVeterinario, lote, status, tipo }) ||
+            this.medicine()
+                .then(items => items
+                    .filter(({ nomeComercial, principioAtivo }) =>
+                        (nomeComercial.search(new RegExp(search, 'ig')) !== -1) ||
+                        (principioAtivo.search(new RegExp(search, 'ig')) !== -1)
+                    )
+                    .filter(item => !usoVeterinario || item.usoVeterinario === 'S')
+                    .filter(item => !lote.length || item.lote === lote)
+                    .filter(item => !status.length || status.includes(item.status && item.status.id))
+                    .filter(item => !tipo.length || tipo.includes(item.tipo && item.tipo.id))
+                )
     }
 
     //Users

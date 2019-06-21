@@ -65,7 +65,7 @@ class MedicinesView extends Component {
     fetchItems = async () => {
         const { search, filter } = this.state
         this.setState({ loading: true })
-        const items = await this.sdk.medicines.get(search, filter)
+        const items = await this.sdk.medicines.get({ search, filter })
         this.setState({ items, loading: false })
     }
 
@@ -149,6 +149,7 @@ class MedicinesView extends Component {
                             !items.length ?
                                 <div style={{ textAlign: 'center', margin: 'calc(50vh - 150px) 0' }}>
                                     <T gutterBottom>Nenhum Medicamento Encontrado</T>
+                                    <T gutterBottom><Button variant="outlined" color="primary" onClick={toggleState(this, 'filterOpen')}>Experimente Mudar os parametros de filtragem</Button></T>
                                     <WithRoles roles="admin" callback={() =>
                                         <Button onClick={this.dialogToggle} color="primary" variant="contained" size="large">Cadastre um novo medicamento</Button>
                                     } />
@@ -289,7 +290,7 @@ class MedicinesView extends Component {
                         status={statusOptions}
                         types={typesOptions}
                         open={filterOpen}
-                        onApply={filter => this.setState({ filter, filterOpen: false }, this.fetchItems)} />
+                        onApply={filter => console.warn(filter) || this.setState({ filter, filterOpen: false }, this.fetchItems)} />
                 </main>
             </>
         );
