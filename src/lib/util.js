@@ -55,6 +55,14 @@ export function useStateReset(initialState, input) {
     return [state, setState]
 }
 
+/**
+ * Generate a function to toggle an state
+ * TODO: refatorate
+ * @export
+ * @param {React.Component} instance
+ * @param {String} prop
+ * @returns {Function}
+ */
 export function toggleState(instance, prop) {
     return () => instance.setState({ [prop]: !instance.state[prop] })
 }

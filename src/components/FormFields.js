@@ -8,7 +8,7 @@ import { TextField } from '@material-ui/core';
  * @param {*} { fields = [], values = {}, fieldProps = {}, onChange }
  * @returns
  */
-export default function FormFields({ fields = [], values = {}, fieldProps = {}, onChange }) {
+export default function FormFields({ disabled, fields = [], values = {}, fieldProps = {}, onChange }) {
     return fields.map(([field, label, args = {}, hidden], i) => !hidden &&
         <TextField
             key={field}
@@ -21,6 +21,7 @@ export default function FormFields({ fields = [], values = {}, fieldProps = {}, 
             onChange={e => onChange(field, e.target.value)}
             type="text"
             fullWidth
+            disabled={disabled}
             {...fieldProps}
             {...args}
         />

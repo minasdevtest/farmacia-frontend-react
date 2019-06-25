@@ -5,7 +5,7 @@ import { withSdk } from '../../lib/sdkContext';
 import { withLogin } from '../LoginView';
 import { preventDefault } from '../../lib/util';
 
-/** @typedef {import('../../lib/farmaSDK').default} FarmaSDK */
+/** @typedef {import('../../lib/farmaSDK').default} FarmaSdk */
 
 
 /**
@@ -31,7 +31,7 @@ class UserForm extends Component {
      *
      * @readonly
      * @memberof UserForm
-     * @returns {FarmaSDK}
+     * @returns {FarmaSdk}
      */
     get sdk() { return this.props.sdk }
 

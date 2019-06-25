@@ -11,11 +11,19 @@ function toggleArrayItem(item, array = []) {
     return newArray
 }
 
+/**
+ * Medicine Filter
+ * TODO: fix tabindex radio
+ *
+ * @export
+ * @param {Object} { initialFilter = {}, onApply, status = [], types = [], ...props }
+ * @returns {React.Component}
+ */
 export default function MedicineFilter({ initialFilter = {}, onApply, status = [], types = [], ...props }) {
     const [filter, setFilter] = useState(initialFilter)
     const onChange = (field, value) => setFilter({ ...filter, [field]: value })
     const close = () => onApply(filter)
-    const { lote: idFilter = '', usoVeterinario: vetFilter = false, status: statusFilter = [], types: typesFilter = [] } = filter
+    const { lote: idFilter = '', usoVeterinario: vetFilter = false, status: statusFilter = [], tipo: typesFilter = [] } = filter
     const drawer = (<>
         <Toolbar>
             <IconButton style={{ marginLeft: -16, marginRight: 8 }} onClick={close} color="inherit" edge="start">
@@ -39,27 +47,28 @@ export default function MedicineFilter({ initialFilter = {}, onApply, status = [
                         step="1"
                         value={idFilter}
                         onChange={e => onChange('lote', e.target.value)}
-                        InputProps={{endAdornment: <InputAdornment position="end">
-                            <IconButton edge="end" onClick={() => onChange('lote', '')}>
-                                <CancelIcon />
-                            </IconButton>
-                        </InputAdornment>}}
-/>
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end">
+                                <IconButton edge="end" onClick={() => onChange('lote', '')}>
+                                    <CancelIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        }}
+                    />
                 </ListItem>
                 <Divider />
 
-                <ListItem button component="label" htmlFor="filter-vet">
+                <ListItemSwitch
+                    id="filter-vet"
+                    title="Uso veterinário"
+                    checked={vetFilter}
+                    onChange={e => onChange('usoVeterinario', e.target.checked)}
+                >
                     <ListItemIcon>
                         <PetsIcon color="primary" />
                     </ListItemIcon>
-                    <ListItemText primary="Uso veterinário" />
-                    <ListItemSecondaryAction>
-                        <Switch
-                            checked={vetFilter}
-                            onChange={e => onChange('usoVeterinario', e.target.checked)}
-                            color="primary" edge="end" id="filter-vet" />
-                    </ListItemSecondaryAction>
-                </ListItem>
+                </ListItemSwitch>
+
                 <Divider />
 
                 <ListItemNested titleChildren={<>
@@ -69,15 +78,11 @@ export default function MedicineFilter({ initialFilter = {}, onApply, status = [
                     <ListItemText primary="Status" />
                 </>}>
                     {status.map(({ id, descricao }) =>
-                        <ListItem key={id} button component="label" htmlFor={`filter-status-${id}`}>
-                            <ListItemText primary={descricao} />
-                            <ListItemSecondaryAction>
-                                <Switch
-                                    checked={-1 !== statusFilter.findIndex(v => id === v)}
-                                    onChange={() => onChange('status', toggleArrayItem(id, statusFilter))}
-                                    color="primary" edge="end" id={`filter-status-${id}`} />
-                            </ListItemSecondaryAction>
-                        </ListItem>
+                        <ListItemSwitch
+                            key={id} id={`filter-status-${id}`} title={descricao}
+                            checked={-1 !== statusFilter.findIndex(v => id === v)}
+                            onChange={() => onChange('status', toggleArrayItem(id, statusFilter))}
+                        />
                     )}
                 </ListItemNested>
                 <Divider />
@@ -89,15 +94,11 @@ export default function MedicineFilter({ initialFilter = {}, onApply, status = [
                     <ListItemText primary="Tipo" />
                 </>}>
                     {types.map(({ id, descricao }) =>
-                        <ListItem key={id} button component="label" htmlFor={`filter-type-${id}`}>
-                            <ListItemText primary={descricao} />
-                            <ListItemSecondaryAction>
-                                <Switch
-                                    checked={-1 !== typesFilter.findIndex(v => id === v)}
-                                    onChange={() => onChange('types', toggleArrayItem(id, typesFilter))}
-                                    color="primary" edge="end" id={`filter-type-${id}`} />
-                            </ListItemSecondaryAction>
-                        </ListItem>
+                        <ListItemSwitch
+                            key={id} id={`filter-type-${id}`} title={descricao}
+                            checked={-1 !== typesFilter.findIndex(v => id === v)}
+                            onChange={() => onChange('tipo', toggleArrayItem(id, statusFilter))}
+                        />
                     )}
                 </ListItemNested>
                 <Divider />
@@ -112,5 +113,20 @@ export default function MedicineFilter({ initialFilter = {}, onApply, status = [
         <Drawer onClose={close} anchor="right" variant="temporary" {...props} ModalProps={{ keepMounted: true }}>
             {drawer}
         </Drawer>
+    )
+}
+
+
+function ListItemSwitch({ children, checked, id, title, ...props }) {
+    return (
+        <ListItem button component="label" htmlFor={id} tabIndex="-1" selected={checked}>
+            {children}
+            <ListItemText primary={title} />
+            <ListItemSecondaryAction>
+                <Switch color="primary" edge="end" id={id} checked={checked}
+                    {...props}
+                />
+            </ListItemSecondaryAction>
+        </ListItem>
     )
 }
