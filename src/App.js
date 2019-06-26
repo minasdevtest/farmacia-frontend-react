@@ -18,6 +18,7 @@ import UsersView from 'components/views/Users';
 import NotFound from 'components/views/NotFound';
 import UserForm from 'components/views/UserForm';
 import ContactView from 'components/views/ContactView';
+import SacView from 'components/views/SacView';
 
 class App extends Component {
     render() {
@@ -37,6 +38,7 @@ class App extends Component {
                                     <Route exact path="/medicine" component={MedicinesView} />
                                     <Route exact path="/contact" component={ContactView} />
                                     <Route exact path="/user" component={UsersView} />
+                                    <Route exact path="/sac" component={SacView} />
                                     <Route exact path="/me" component={UserForm} />
                                     <Route path="/" component={NotFound} />
                                 </Switch>

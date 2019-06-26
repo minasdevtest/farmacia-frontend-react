@@ -32,6 +32,9 @@ class Home extends Component {
                                     <ListItem button component={Link} to="user">
                                         <ListItemText primary="Usuários" secondary="Cadastre e gerencie usuários" />
                                     </ListItem>
+                                    <ListItem button component={Link} to="sac">
+                                        <ListItemText primary="SAC" secondary="Responda dúdivas de usuários" />
+                                    </ListItem>
                                 </WithRoles>
 
                                 <ListItem button component={Link} to="about">

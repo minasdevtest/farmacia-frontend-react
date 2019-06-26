@@ -4,6 +4,7 @@ import { Typography as T, Card, CardContent, CardActions, Button, Container, Sna
 import FormFields from 'components/FormFields';
 import { preventDefault, toggleState } from 'lib/util';
 import { withSdk } from 'lib/sdkContext';
+import Loader from 'components/Loader';
 
 /** @typedef {import('lib/farmaSDK').default} FarmaSdk */
 
@@ -49,6 +50,7 @@ class ContactView extends Component {
             <Fragment>
                 <Header title="Contato" backButton />
                 <main>
+                    {loading && <Loader />}
                     <form method="post" onSubmit={preventDefault(this.handleSubmit)}>
                         <Container >
                             <Card style={{ margin: "10px 0", overflow: 'auto' }}>

@@ -149,8 +149,10 @@ export default class FarmaSdk extends BaseModule {
     sac = {
 
         get: () => waitPromise().then(() => [
-            { nomeDoUsuario: 'João da Silva', email: 'joao@example.com', telefone: '12345678', mensagem: 'Como uso o sistema?' },
-            { nomeDoUsuario: 'Maria Joana', email: 'maria@example.com', telefone: '12345678', mensagem: "Uma história\n\nFim" },
+            { id: 1,nomeDoUsuario: 'João da Silva', email: 'joao@example.com', telefone: '12345678', mensagem: 'Como uso o sistema?' },
+            { id: 2,nomeDoUsuario: 'Maria Joana', email: 'maria@example.com', telefone: '12345678', mensagem: "Uma história\n\nFim" },
+            { id: 3,nomeDoUsuario: 'João da Silva', email: 'joao@example.com', telefone: '12345678', mensagem: 'Como uso o sistema?' },
+            { id: 4,nomeDoUsuario: 'Maria Joana', email: 'maria@example.com', telefone: '12345678', mensagem: "Uma história\n\nFim" },
         ]),
 
         add: data => waitPromise().then(() => true)

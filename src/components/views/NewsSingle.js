@@ -42,7 +42,7 @@ class NewsSingle extends Component {
 
                         <Card component="article" style={{ maxWidth: 480, margin: '10px auto' }}>
 
-                            {article._embedded['wp:featuredmedia'] &&
+                            {article._embedded && article._embedded['wp:featuredmedia'] &&
                                 <CardMedia
                                     style={{ height: 140 }}
                                     title={article._embedded['wp:featuredmedia'][0].title.rendered}

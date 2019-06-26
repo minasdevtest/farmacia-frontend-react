@@ -49,7 +49,7 @@ class News extends Component {
                             <Card component="article" key={article.id}
                                 style={{ maxWidth: 480, margin: '10px auto' }}>
                                 <CardActionArea component={Link} to={`news/${article.id}`}>
-                                    {article._embedded['wp:featuredmedia'] &&
+                                    {article._embedded && article._embedded['wp:featuredmedia'] &&
                                         <CardMedia
                                             style={{ height: 140 }}
                                             title={article._embedded['wp:featuredmedia'][0].title.rendered}

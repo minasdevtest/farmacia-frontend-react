@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import FarmaSdk from './farmaSDK';
 
 export const SdkContext = React.createContext({})
@@ -19,3 +19,14 @@ export const withSdk =
                     {context => <Component {...props} {...mapProps(context)} />}
                 </SdkContext.Consumer>
             )
+
+/**
+ * SDK hook
+ *
+ * @export
+ * @returns {FarmaSdk}
+ */
+export function useSdk() {
+    const { sdk } = useContext(SdkContext)
+    return sdk
+}
