@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1183fdc066547e9ea5563f15d541e20b",
+    "revision": "80fd2449254c09626ccb5eb519309cd8",
     "url": "/farmacia-frontend-react/index.html"
   },
   {
-    "revision": "e9688158d85805dc7c99",
+    "revision": "bd0f0f534640508b9505",
     "url": "/farmacia-frontend-react/static/css/2.3015371f.chunk.css"
   },
   {
-    "revision": "83e6e600178395b2731d",
+    "revision": "a0eaf5fcfc621ac423ff",
     "url": "/farmacia-frontend-react/static/css/main.88101f86.chunk.css"
   },
   {
-    "revision": "e9688158d85805dc7c99",
-    "url": "/farmacia-frontend-react/static/js/2.5922af88.chunk.js"
+    "revision": "bd0f0f534640508b9505",
+    "url": "/farmacia-frontend-react/static/js/2.938eefe5.chunk.js"
   },
   {
-    "revision": "83e6e600178395b2731d",
-    "url": "/farmacia-frontend-react/static/js/main.ef6d085b.chunk.js"
+    "revision": "a0eaf5fcfc621ac423ff",
+    "url": "/farmacia-frontend-react/static/js/main.648bf21a.chunk.js"
   },
   {
     "revision": "b3ebb60628b87bb32fb0",
