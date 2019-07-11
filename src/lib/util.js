@@ -66,3 +66,23 @@ export function useStateReset(initialState, input) {
 export function toggleState(instance, prop) {
     return () => instance.setState({ [prop]: !instance.state[prop] })
 }
+
+/**
+ * Make a Promise cancellable
+ *
+ * @export
+ * @param {Promise} promise
+ * @returns {[Promise, Function]}
+ */
+export function cancellablePromise(promise) {
+    let cancel
+    const newPromise = Promise.race([
+        promise,
+        new Promise(
+            (_, reject) =>
+                cancel = () =>
+                    reject(new Error("canceled"))
+        )
+    ])
+    return [newPromise, cancel]
+}

@@ -69,11 +69,6 @@ class MedicinesView extends Component {
         this.setState({ items, loading: false })
     }
 
-    filter = async filter => {
-
-    }
-
-
     componentDidMount = () => this.load()
 
     dialogToggle = () => this.setState({
@@ -130,6 +125,16 @@ class MedicinesView extends Component {
             .then(() => this.setState({ sending: false, action: '' }))
     }
 
+    editItem = item => this.setState({
+        newItem: {
+            ...item,
+            valorEstoque: (item.estoque && item.estoque.quantidade) || 1,
+            status: item.status && item.status.id,
+            tipo: item.tipo && item.tipo.id,
+        }, newItemOpen: true,
+        editItemId: item.lote
+    })
+
     render() {
         const { filterOpen, item, action, requestDetails, newItemOpen, newItem, itemDetails, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
 
@@ -158,11 +163,13 @@ class MedicinesView extends Component {
                                     <Table>
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell padding="checkbox">Lote</TableCell>
+                                                <WithRoles roles="admin">
+                                                    <TableCell padding="checkbox">Lote</TableCell>
+                                                    <TableCell style={{ width: 60 }}>Status</TableCell>
+                                                    <TableCell align="right" padding="none">Qtd.</TableCell>
+                                                    <TableCell>Lab.</TableCell>
+                                                </WithRoles>
                                                 <TableCell>Nome</TableCell>
-                                                <TableCell style={{ width: 60 }}>Status</TableCell>
-                                                <TableCell align="right" padding="none">Qtd.</TableCell>
-                                                <TableCell>Lab.</TableCell>
                                                 <TableCell padding="none">Detalhes</TableCell>
                                                 <TableCell style={{ width: 100 }}>Ações</TableCell>
                                             </TableRow>
@@ -170,24 +177,27 @@ class MedicinesView extends Component {
                                         <TableBody>
                                             {items.map(item =>
                                                 <TableRow key={item.lote}>
-                                                    <TableCell padding="checkbox">
-                                                        <small>{item.lote}</small>
-                                                    </TableCell>
+                                                    <WithRoles roles="admin">
+                                                        <TableCell padding="checkbox">
+                                                            <small>{item.lote}</small>
+                                                        </TableCell>
+
+                                                        <TableCell>
+                                                            {item.status.descricao}
+                                                        </TableCell>
+
+                                                        <TableCell align="right" padding="none">
+                                                            {(item.estoque && item.estoque.quantidade) || 'N/A'}
+                                                        </TableCell>
+
+                                                        <TableCell>
+                                                            {item.laboratorio}
+                                                        </TableCell>
+                                                    </WithRoles>
+
                                                     <TableCell component="th" scope="row">
                                                         {item.nomeComercial}<br />
                                                         <small>{item.principioAtivo}</small>
-                                                    </TableCell>
-
-                                                    <TableCell>
-                                                        {item.status.descricao}
-                                                    </TableCell>
-
-                                                    <TableCell align="right" padding="none">
-                                                        {(item.estoque && item.estoque.quantidade) || 'N/A'}
-                                                    </TableCell>
-
-                                                    <TableCell>
-                                                        {item.laboratorio}
                                                     </TableCell>
 
                                                     <TableCell padding="none">
@@ -199,15 +209,7 @@ class MedicinesView extends Component {
 
                                                     <TableCell>
                                                         <WithRoles roles="admin">
-                                                            <IconButton onClick={() => this.setState({
-                                                                newItem: {
-                                                                    ...item,
-                                                                    valorEstoque: (item.estoque && item.estoque.quantidade) || 1,
-                                                                    status: item.status && item.status.id,
-                                                                    tipo: item.tipo && item.tipo.id,
-                                                                }, newItemOpen: true,
-                                                                editItemId: item.lote
-                                                            })} color="secondary">
+                                                            <IconButton onClick={() => this.editItem(item)} color="secondary">
                                                                 <EditIcon />
                                                             </IconButton>
                                                             <IconButton disabled={this.state.sending} onClick={() => this.setAction(item, 'delete')}>
@@ -254,6 +256,7 @@ class MedicinesView extends Component {
                         <MedicineEditDialog
                             open={newItemOpen}
                             onClose={this.dialogToggle}
+                            onItemFound={this.editItem}
                             onSubmit={this.createItem}
                             editing={Boolean(editItemId)}
                             item={newItem}
@@ -287,6 +290,7 @@ class MedicinesView extends Component {
                     </>} />
 
                     <MedicineFilter
+                        initialFilter={{ status: [1] }}
                         status={statusOptions}
                         types={typesOptions}
                         open={filterOpen}

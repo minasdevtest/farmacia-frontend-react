@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useContext } from 'react'
 import FarmaSdk from './farmaSDK';
 
 export const AuthContext = React.createContext({
@@ -80,3 +80,8 @@ export const withAuth =
                 <AuthContext.Consumer>
                     {context => <Component {...props} {...mapProps(context)} />}
                 </AuthContext.Consumer>
+            
+export function useAuth(){
+    const auth = useContext(AuthContext)
+    return auth
+}

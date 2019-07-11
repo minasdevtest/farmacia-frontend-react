@@ -131,8 +131,7 @@ export default class FarmaSdk extends BaseModule {
          * @param {string} [search='']
          * @param {Object} [filter='']
          */
-        get: ({ search = '', filter: { usoVeterinario, lote = '', status = [], tipo = [] } = {} }) =>
-            console.log({ usoVeterinario, lote, status, tipo }) ||
+        get: ({ search = '', filter: { usoVeterinario, lote = '', status = [], tipo = [] } = {} } = {}) =>
             this.medicine()
                 .then(items => items
                     .filter(({ nomeComercial, principioAtivo }) =>
@@ -143,16 +142,19 @@ export default class FarmaSdk extends BaseModule {
                     .filter(item => !lote.length || item.lote === lote)
                     .filter(item => !status.length || status.includes(item.status && item.status.id))
                     .filter(item => !tipo.length || tipo.includes(item.tipo && item.tipo.id))
-                )
+                ),
+        getOne: lote => this.medicines
+            .get()
+            .then(items => items.find(item => item.lote === lote))
     }
 
     sac = {
 
         get: () => waitPromise().then(() => [
-            { id: 1,nomeDoUsuario: 'João da Silva', email: 'joao@example.com', telefone: '12345678', mensagem: 'Como uso o sistema?' },
-            { id: 2,nomeDoUsuario: 'Maria Joana', email: 'maria@example.com', telefone: '12345678', mensagem: "Uma história\n\nFim" },
-            { id: 3,nomeDoUsuario: 'João da Silva', email: 'joao@example.com', telefone: '12345678', mensagem: 'Como uso o sistema?' },
-            { id: 4,nomeDoUsuario: 'Maria Joana', email: 'maria@example.com', telefone: '12345678', mensagem: "Uma história\n\nFim" },
+            { id: 1, nomeDoUsuario: 'João da Silva', email: 'joao@example.com', telefone: '12345678', mensagem: 'Como uso o sistema?' },
+            { id: 2, nomeDoUsuario: 'Maria Joana', email: 'maria@example.com', telefone: '12345678', mensagem: "Uma história\n\nFim" },
+            { id: 3, nomeDoUsuario: 'João da Silva', email: 'joao@example.com', telefone: '12345678', mensagem: 'Como uso o sistema?' },
+            { id: 4, nomeDoUsuario: 'Maria Joana', email: 'maria@example.com', telefone: '12345678', mensagem: "Uma história\n\nFim" },
         ]),
 
         add: data => waitPromise().then(() => true)
