@@ -1,18 +1,19 @@
 {
   "files": {
     "main.css": "/farmacia-frontend-react/static/css/main.88101f86.chunk.css",
-    "main.js": "/farmacia-frontend-react/static/js/main.c7f7fa2b.chunk.js",
-    "main.js.map": "/farmacia-frontend-react/static/js/main.c7f7fa2b.chunk.js.map",
+    "main.js": "/farmacia-frontend-react/static/js/main.c4b18df1.chunk.js",
+    "main.js.map": "/farmacia-frontend-react/static/js/main.c4b18df1.chunk.js.map",
     "runtime~main.js": "/farmacia-frontend-react/static/js/runtime~main.04f9b287.js",
     "runtime~main.js.map": "/farmacia-frontend-react/static/js/runtime~main.04f9b287.js.map",
     "static/css/2.3015371f.chunk.css": "/farmacia-frontend-react/static/css/2.3015371f.chunk.css",
-    "static/js/2.ca191ee1.chunk.js": "/farmacia-frontend-react/static/js/2.ca191ee1.chunk.js",
-    "static/js/2.ca191ee1.chunk.js.map": "/farmacia-frontend-react/static/js/2.ca191ee1.chunk.js.map",
+    "static/js/2.de9901e4.chunk.js": "/farmacia-frontend-react/static/js/2.de9901e4.chunk.js",
+    "static/js/2.de9901e4.chunk.js.map": "/farmacia-frontend-react/static/js/2.de9901e4.chunk.js.map",
     "index.html": "/farmacia-frontend-react/index.html",
-    "precache-manifest.61a5a1375d4659f5f33a71a1b1772bb1.js": "/farmacia-frontend-react/precache-manifest.61a5a1375d4659f5f33a71a1b1772bb1.js",
+    "precache-manifest.88fdd91598ca5ca20ed2bc2d36f9117d.js": "/farmacia-frontend-react/precache-manifest.88fdd91598ca5ca20ed2bc2d36f9117d.js",
     "service-worker.js": "/farmacia-frontend-react/service-worker.js",
     "static/css/2.3015371f.chunk.css.map": "/farmacia-frontend-react/static/css/2.3015371f.chunk.css.map",
     "static/css/main.88101f86.chunk.css.map": "/farmacia-frontend-react/static/css/main.88101f86.chunk.css.map",
+    "static/media/hero-image.png": "/farmacia-frontend-react/static/media/hero-image.00db58a9.png",
     "static/media/index.css": "/farmacia-frontend-react/static/media/roboto-latin-900italic.bc833e72.woff"
   }
 }

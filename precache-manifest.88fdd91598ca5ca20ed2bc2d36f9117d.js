@@ -1,27 +1,31 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "65cfda8387f41a8435bd89f1aaf842d7",
+    "revision": "872df1ff6c7fdff7fa1e696661531a0a",
     "url": "/farmacia-frontend-react/index.html"
   },
   {
-    "revision": "fc9c829c7a576f570187",
+    "revision": "57fc58d28bc7ef58be4c",
     "url": "/farmacia-frontend-react/static/css/2.3015371f.chunk.css"
   },
   {
-    "revision": "d71a1d68453a4dce4466",
+    "revision": "6e9c103e6a836c67eb74",
     "url": "/farmacia-frontend-react/static/css/main.88101f86.chunk.css"
   },
   {
-    "revision": "fc9c829c7a576f570187",
-    "url": "/farmacia-frontend-react/static/js/2.ca191ee1.chunk.js"
+    "revision": "57fc58d28bc7ef58be4c",
+    "url": "/farmacia-frontend-react/static/js/2.de9901e4.chunk.js"
   },
   {
-    "revision": "d71a1d68453a4dce4466",
-    "url": "/farmacia-frontend-react/static/js/main.c7f7fa2b.chunk.js"
+    "revision": "6e9c103e6a836c67eb74",
+    "url": "/farmacia-frontend-react/static/js/main.c4b18df1.chunk.js"
   },
   {
     "revision": "b3ebb60628b87bb32fb0",
     "url": "/farmacia-frontend-react/static/js/runtime~main.04f9b287.js"
+  },
+  {
+    "revision": "00db58a98b2d8d6e58efb0464d61404c",
+    "url": "/farmacia-frontend-react/static/media/hero-image.00db58a9.png"
   },
   {
     "revision": "987b84570ea69ee660455b8d5e91f5f1",
