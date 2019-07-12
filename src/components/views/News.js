@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import Header from '../Header';
 import { Typography, Card, CardContent, CardMedia, CardActionArea, Button } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import FarmaSdk from '../../lib/farmaSDK'
 import { WithRoles } from '../../lib/authHOC';
 import Loader from 'components/Loader';
+import { useSdk } from 'lib/sdkContext';
 
 /**
  * News Component
@@ -44,33 +45,42 @@ class News extends Component {
                     </WithRoles>
                 } />
                 <main>
-                    {this.state.loading ? <Loader /> :
-                        this.state.news.map(article =>
-                            <Card component="article" key={article.id}
-                                style={{ maxWidth: 480, margin: '10px auto' }}>
-                                <CardActionArea component={Link} to={`news/${article.id}`}>
-                                    {article._embedded && article._embedded['wp:featuredmedia'] &&
-                                        <CardMedia
-                                            style={{ height: 140 }}
-                                            title={article._embedded['wp:featuredmedia'][0].title.rendered}
-                                            image={article._embedded['wp:featuredmedia'][0].source_url.replace('https', 'http')} />
-
-                                    }
-                                    <CardContent>
-                                        <Typography gutterBottom variant="h5" component="h2">
-                                            {article.title.rendered}
-                                        </Typography>
-
-                                        <Typography component="div"
-                                            dangerouslySetInnerHTML={{ __html: article.excerpt.rendered }} />
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        )}
+                    <NewsList loading={<Loader />} />
                 </main>
             </>
         );
     }
 }
+
+export function NewsList({ loader = false }) {
+    const [news, setNews] = useState()
+    const sdk = useSdk()
+    useEffect(() => {
+        sdk.news().then(setNews)
+    }, [sdk])
+    return !news ? loader : news.map(article =>
+        <Card component="article" key={article.id}
+            style={{ maxWidth: 480, margin: '10px auto' }}>
+            <CardActionArea component={Link} to={`news/${article.id}`}>
+                {article._embedded && article._embedded['wp:featuredmedia'] &&
+                    <CardMedia
+                        style={{ height: 140 }}
+                        title={article._embedded['wp:featuredmedia'][0].title.rendered}
+                        image={article._embedded['wp:featuredmedia'][0].source_url.replace('https', 'http')} />
+
+                }
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {article.title.rendered}
+                    </Typography>
+
+                    <Typography component="div"
+                        dangerouslySetInnerHTML={{ __html: article.excerpt.rendered }} />
+                </CardContent>
+            </CardActionArea>
+        </Card>
+    )
+}
+
 
 export default News;

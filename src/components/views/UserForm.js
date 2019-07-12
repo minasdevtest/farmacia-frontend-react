@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography as T, Button, TextField, Card, CardContent, CardActions, Container } from '@material-ui/core';
+import { Typography as T, Button, TextField, Card, CardContent, CardActions, Container, IconButton } from '@material-ui/core';
 import { withSdk } from '../../lib/sdkContext';
 import { withLogin } from '../LoginView';
 import { preventDefault } from '../../lib/util';
+import { Delete, Edit } from '@material-ui/icons';
 
 /** @typedef {import('../../lib/farmaSDK').default} FarmaSdk */
 
@@ -132,9 +133,29 @@ class UserForm extends Component {
                                     <T gutterBottom variant="h5">Endereços</T>
                                     <T>Cadastre endereços para busca de medicamentos em casa.</T>
 
-                                    <div>
-                                        <T color="textSecondary" style={{ margin: '20px 0' }} align="center">Nenhum endereço cadastrado.</T>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                        {[0, 1, 2, 3, 4, 5].map(id =>
+                                            <Card key={id} style={{ margin: 10 }}>
+                                                <CardContent>
+                                                    <T>Casa</T>
+                                                    <T variant="body2">
+                                                        Rua Estrada de Bicas, 461
+                                                         <br />
+                                                        Bairro Retiro
+                                                    </T>
+                                                </CardContent>
+                                                <CardActions disableSpacing>
+                                                    <IconButton>
+                                                         <Edit />
+                                                    </IconButton>
+                                                    <IconButton>
+                                                         <Delete />
+                                                    </IconButton>
+                                                </CardActions>
+                                            </Card>
+                                        )}
                                     </div>
+                                    {/* <T color="textSecondary" style={{ margin: '20px 0' }} align="center">Nenhum endereço cadastrado.</T> */}
 
                                 </CardContent>
                                 <CardActions>

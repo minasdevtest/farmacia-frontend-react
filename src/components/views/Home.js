@@ -8,7 +8,9 @@ class Home extends Component {
     render() {
         return (
             <>
-                <Header title="Farmácia solidária" />
+                <Header
+                    title={<>Farmácia solidária<WithRoles roles="admin"><small>{' - Admin'}</small></WithRoles></>}
+                />
                 <main>
                     <Container>
                         <Card style={{ margin: "10px 0" }}>

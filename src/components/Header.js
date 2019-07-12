@@ -49,11 +49,13 @@ class Header extends Component {
                                 </IconButton>}
                         </div>
 
-                        {title &&
-                            <Typography variant="h6" color="inherit" className={classes.flex}>
-                                {title}
-                            </Typography>
-                        }
+                        <div className={classes.flex}>
+                            {title &&
+                                <Typography variant="h6" color="inherit">
+                                    {title}
+                                </Typography>
+                            }
+                        </div>
 
                         <div>
                             {!simple && (
