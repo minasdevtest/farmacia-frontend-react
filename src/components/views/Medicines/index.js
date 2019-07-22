@@ -141,161 +141,163 @@ class MedicinesView extends Component {
         return (
             <>
                 <Header title="Medicamentos" backButton />
-                <main>
-                    <Container>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <IconButton color="primary" onClick={toggleState(this, 'filterOpen')}>
-                                <FilterIcon />
-                            </IconButton>
-                            <SearchBar onSearch={search => this.setState({ search }, this.fetchItems)} />
-                        </div>
-                        {loading ?
-                            <Loader /> :
-                            !items.length ?
-                                <div style={{ textAlign: 'center', margin: 'calc(50vh - 150px) 0' }}>
-                                    <T gutterBottom>Nenhum Medicamento Encontrado</T>
-                                    <T gutterBottom><Button variant="outlined" color="primary" onClick={toggleState(this, 'filterOpen')}>Experimente Mudar os parametros de filtragem</Button></T>
-                                    <WithRoles roles="admin" callback={() =>
-                                        <Button onClick={this.dialogToggle} color="primary" variant="contained" size="large">Cadastre um novo medicamento</Button>
-                                    } />
-                                </div> :
-                                <Paper style={{ overflow: 'auto' }}>
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
+                <Container component="main">
+                    <WithRoles roles="user">
+                        <T gutterBottom>Busque o medicamento que deseja</T>
+                    </WithRoles>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <IconButton color="primary" onClick={toggleState(this, 'filterOpen')}>
+                            <FilterIcon />
+                        </IconButton>
+                        <SearchBar onSearch={search => this.setState({ search }, this.fetchItems)} />
+                    </div>
+                    {loading ?
+                        <Loader /> :
+                        !items.length ?
+                            <div style={{ textAlign: 'center', margin: 'calc(50vh - 150px) 0' }}>
+                                <T gutterBottom>Nenhum Medicamento Encontrado</T>
+                                <T gutterBottom><Button variant="outlined" color="primary" onClick={toggleState(this, 'filterOpen')}>Experimente Mudar os parametros de filtragem</Button></T>
+                                <WithRoles roles="admin" callback={() =>
+                                    <Button onClick={this.dialogToggle} color="primary" variant="contained" size="large">Cadastre um novo medicamento</Button>
+                                } />
+                            </div> :
+                            <Paper style={{ overflow: 'auto' }}>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <WithRoles roles="admin">
+                                                <TableCell padding="checkbox">Lote</TableCell>
+                                                <TableCell style={{ width: 60 }}>Status</TableCell>
+                                                <TableCell align="right" padding="none">Qtd.</TableCell>
+                                                <TableCell>Lab.</TableCell>
+                                            </WithRoles>
+                                            <TableCell>Nome</TableCell>
+                                            <TableCell padding="none">Detalhes</TableCell>
+                                            <TableCell style={{ width: 100 }}>Ações</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {items.map(item =>
+                                            <TableRow key={item.lote}>
                                                 <WithRoles roles="admin">
-                                                    <TableCell padding="checkbox">Lote</TableCell>
-                                                    <TableCell style={{ width: 60 }}>Status</TableCell>
-                                                    <TableCell align="right" padding="none">Qtd.</TableCell>
-                                                    <TableCell>Lab.</TableCell>
-                                                </WithRoles>
-                                                <TableCell>Nome</TableCell>
-                                                <TableCell padding="none">Detalhes</TableCell>
-                                                <TableCell style={{ width: 100 }}>Ações</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {items.map(item =>
-                                                <TableRow key={item.lote}>
-                                                    <WithRoles roles="admin">
-                                                        <TableCell padding="checkbox">
-                                                            <small>{item.lote}</small>
-                                                        </TableCell>
-
-                                                        <TableCell>
-                                                            {item.status.descricao}
-                                                        </TableCell>
-
-                                                        <TableCell align="right" padding="none">
-                                                            {(item.estoque && item.estoque.quantidade) || 'N/A'}
-                                                        </TableCell>
-
-                                                        <TableCell>
-                                                            {item.laboratorio}
-                                                        </TableCell>
-                                                    </WithRoles>
-
-                                                    <TableCell component="th" scope="row">
-                                                        {item.nomeComercial}<br />
-                                                        <small>{item.principioAtivo}</small>
-                                                    </TableCell>
-
-                                                    <TableCell padding="none">
-                                                        <b>Dosagem: </b>{item.dosagem}<br />
-                                                        {item.tipo.descricao}<br />
-                                                        <b>Vencimento: </b>
-                                                        {dateFormated(item.dataVencimento)}
+                                                    <TableCell padding="checkbox">
+                                                        <small>{item.lote}</small>
                                                     </TableCell>
 
                                                     <TableCell>
-                                                        <WithRoles roles="admin">
-                                                            <IconButton onClick={() => this.editItem(item)} color="secondary">
-                                                                <EditIcon />
-                                                            </IconButton>
-                                                            <IconButton disabled={this.state.sending} onClick={() => this.setAction(item, 'delete')}>
-                                                                <DeleteIcon />
-                                                            </IconButton>
-                                                        </WithRoles>
-
-                                                        <WithRoles roles="user">
-                                                            <IconButton onClick={() => this.setState({ itemDetails: item })} color="primary">
-                                                                <PlusIcon />
-                                                            </IconButton>
-                                                        </WithRoles>
+                                                        {item.status.descricao}
                                                     </TableCell>
 
-                                                </TableRow>
-                                            )}
-                                        </TableBody>
-                                        <TableFooter>
-                                            <TableRow>
-                                                <TablePagination
-                                                    colSpan={7}
-                                                    rowsPerPage={8}
-                                                    count={50}
-                                                    page={0}
-                                                    rowsPerPageOptions={[]}
-                                                    labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
-                                                    onChangePage={console.log}
-                                                />
+                                                    <TableCell align="right" padding="none">
+                                                        {(item.estoque && item.estoque.quantidade) || 'N/A'}
+                                                    </TableCell>
+
+                                                    <TableCell>
+                                                        {item.laboratorio}
+                                                    </TableCell>
+                                                </WithRoles>
+
+                                                <TableCell component="th" scope="row">
+                                                    {item.nomeComercial}<br />
+                                                    <small>{item.principioAtivo}</small>
+                                                </TableCell>
+
+                                                <TableCell padding="none">
+                                                    <b>Dosagem: </b>{item.dosagem}<br />
+                                                    {item.tipo.descricao}<br />
+                                                    <b>Vencimento: </b>
+                                                    {dateFormated(item.dataVencimento)}
+                                                </TableCell>
+
+                                                <TableCell>
+                                                    <WithRoles roles="admin">
+                                                        <IconButton onClick={() => this.editItem(item)} color="secondary">
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                        <IconButton disabled={this.state.sending} onClick={() => this.setAction(item, 'delete')}>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </WithRoles>
+
+                                                    <WithRoles roles="user">
+                                                        <IconButton onClick={() => this.setState({ itemDetails: item })} color="primary">
+                                                            <PlusIcon />
+                                                        </IconButton>
+                                                    </WithRoles>
+                                                </TableCell>
+
                                             </TableRow>
-                                        </TableFooter>
-                                    </Table>
-                                </Paper>
-                        }
-                    </Container>
+                                        )}
+                                    </TableBody>
+                                    <TableFooter>
+                                        <TableRow>
+                                            <TablePagination
+                                                colSpan={7}
+                                                rowsPerPage={8}
+                                                count={50}
+                                                page={0}
+                                                rowsPerPageOptions={[]}
+                                                labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count}`}
+                                                onChangePage={console.log}
+                                            />
+                                        </TableRow>
+                                    </TableFooter>
+                                </Table>
+                            </Paper>
+                    }
+                </Container>
 
 
-                    <WithRoles roles="admin" callback={() => <>
-                        <Fab color="primary" title="Adicionar" aria-label="Adicionar"
-                            onClick={this.dialogToggle}
-                            style={{ position: 'sticky', bottom: 16, right: 16, float: 'right', margin: 16 }}>
-                            <AddIcon />
-                        </Fab>
 
-                        <MedicineEditDialog
-                            open={newItemOpen}
-                            onClose={this.dialogToggle}
-                            onItemFound={this.editItem}
-                            onSubmit={this.createItem}
-                            editing={Boolean(editItemId)}
-                            item={newItem}
-                            onFieldChange={(field, value) => this.setState({ newItem: { ...newItem, [field]: value } })}
-                            {...{ typesOptions, statusOptions, sending }}
-                        />
+                <WithRoles roles="admin" callback={() => <>
+                    <Fab color="primary" title="Adicionar" aria-label="Adicionar"
+                        onClick={this.dialogToggle}
+                        style={{ position: 'sticky', bottom: 16, right: 16, float: 'right', margin: 16 }}>
+                        <AddIcon />
+                    </Fab>
 
-                        <MedicineDelete
-                            item={item}
-                            open={action === 'delete'}
-                            loading={sending}
-                            onClose={this.resetAction}
-                            onDelete={this.deleteItem}
-                        />
+                    <MedicineEditDialog
+                        open={newItemOpen}
+                        onClose={this.dialogToggle}
+                        onItemFound={this.editItem}
+                        onSubmit={this.createItem}
+                        editing={Boolean(editItemId)}
+                        item={newItem}
+                        onFieldChange={(field, value) => this.setState({ newItem: { ...newItem, [field]: value } })}
+                        {...{ typesOptions, statusOptions, sending }}
+                    />
 
-                    </>} />
+                    <MedicineDelete
+                        item={item}
+                        open={action === 'delete'}
+                        loading={sending}
+                        onClose={this.resetAction}
+                        onDelete={this.deleteItem}
+                    />
 
-                    <WithRoles roles="user" callback={() => <>
-                        <MedicineDetails
-                            item={itemDetails}
-                            open={Boolean(itemDetails)}
-                            loading={sending}
-                            onClose={() => this.setState({ itemDetails: null })}
-                            onRequest={this.requestItem}
-                        />
-                        <MedicineRequestDetails
-                            open={Boolean(requestDetails)}
-                            onClose={() => !sending && this.setState({ requestDetails: null })}
-                            request={requestDetails}
-                        />
-                    </>} />
+                </>} />
 
-                    <MedicineFilter
-                        initialFilter={{ status: [1] }}
-                        status={statusOptions}
-                        types={typesOptions}
-                        open={filterOpen}
-                        onApply={filter => console.warn(filter) || this.setState({ filter, filterOpen: false }, this.fetchItems)} />
-                </main>
+                <WithRoles roles="user" callback={() => <>
+                    <MedicineDetails
+                        item={itemDetails}
+                        open={Boolean(itemDetails)}
+                        loading={sending}
+                        onClose={() => this.setState({ itemDetails: null })}
+                        onRequest={this.requestItem}
+                    />
+                    <MedicineRequestDetails
+                        open={Boolean(requestDetails)}
+                        onClose={() => !sending && this.setState({ requestDetails: null })}
+                        request={requestDetails}
+                    />
+                </>} />
+
+                <MedicineFilter
+                    initialFilter={{ status: [1] }}
+                    status={statusOptions}
+                    types={typesOptions}
+                    open={filterOpen}
+                    onApply={filter => console.warn(filter) || this.setState({ filter, filterOpen: false }, this.fetchItems)} />
             </>
         );
     }

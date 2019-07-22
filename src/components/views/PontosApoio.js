@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../Header';
-import { Typography, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide } from '@material-ui/core';
+import { Typography as T, Button, TextField, Table, TableRow, TableBody, TableCell, TableHead, Paper, Fab, Dialog, DialogContent, DialogContentText, DialogActions, IconButton, Slide, Container } from '@material-ui/core';
 import FarmaSdk from '../../lib/farmaSDK'
 import { Add as AddIcon, Delete as DeleteIcon, Edit as EditIcon, Close as CloseIcon } from '@material-ui/icons';
 import { withLogin } from '../LoginView';
@@ -83,11 +83,14 @@ class PontosApoio extends Component {
         return (
             <>
                 <Header title="Pontos de Apoio" backButton />
-                <main>
+                <Container component="main">
+                    <WithRoles roles="user">
+                        <T gutterBottom>Encontre um ponto de coleta perto de você.</T>
+                    </WithRoles>
                     {loading ?
                         <Loader /> :
                         !items.length ?
-                            <Typography align="center">Lista vazia</Typography> :
+                            <T align="center">Lista vazia</T> :
                             <Paper style={{ margin: 10, overflow: 'auto' }}>
                                 <Table>
                                     <TableHead>
@@ -187,7 +190,7 @@ class PontosApoio extends Component {
                             </DialogActions>
                         </form>
                     </Dialog>
-                </main>
+                </Container>
             </>
         );
     }

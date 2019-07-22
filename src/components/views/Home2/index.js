@@ -5,7 +5,8 @@ import { makeStyles } from '@material-ui/styles';
 import { Typography as T, Button, Container, useScrollTrigger, Grid } from '@material-ui/core';
 import ContactForm from 'components/ContactForm';
 import { Link } from 'react-router-dom'
-import { NewsList } from './News';
+import { NewsList } from '../News';
+import HomeInstructions from './HomeInstructions';
 
 const useStyles = makeStyles({
     hero: {
@@ -42,6 +43,10 @@ const useStyles = makeStyles({
     transition: {
         transition: 'all 200ms ease-out'
     },
+    stickyTitle: {
+        position: 'sticky',
+        top: 80,
+    }
 
 })
 
@@ -63,43 +68,47 @@ export default function Home() {
                         <T variant="h5" gutterBottom>Com uma pequena ajuda você faz uma grande diferença</T>
                         <div>
                             <Button size="large" color="primary" variant="contained" component={Link} to="/medicine">Fazer Pedido</Button>
-                            <Button size="large" variant="outlined" color="inherit" style={{ marginLeft: 10 }} component={Link} to="/place">Pontos de doação</Button>
+                            <Button size="large" variant="outlined" color="inherit" style={{ marginLeft: 10 }} component={Link} to="/place">Quero doar</Button>
                         </div>
                     </div>
                 </div>
-                <section className={css.section} style={{background: '#fff'}}>
+                <section className={css.section} style={{ background: '#fff' }}>
                     <Container>
-                        <Grid container>
-                            <Grid item xs={6}>
-                                <T variant="h5">Seus medicamentos podem salvar vidas</T>
-                                <T>Os medicamentos que você não usou podem ajudar muitas pessoas</T>
-                            </Grid>
-                            <Grid item xs={6}>
 
-                            </Grid>
-                        </Grid>
+                        <header style={{ textAlign: 'center' }}>
+                            <T variant="h4" gutterBottom>Seus medicamentos podem salvar vidas</T>
+                            <T variant="body1" gutterBottom>Veja como é fácil ajudar!</T>
+                        </header>
+
+                        <HomeInstructions />
+
                     </Container>
                 </section>
 
                 <section className={css.section}>
-                    <Container>
-                        <Grid container alignItems="center">
+                    <Container maxWidth="md">
+                        <Grid container>
                             <Grid item xs={6}>
-                                <T variant="h2">Notícias</T>
+                                <div className={css.stickyTitle}>
+                                    <T variant="h2" gutterBottom>Notícias</T>
+                                    <T variant="body1">Fique por dentro das novidades.</T>
+                                </div>
+
                             </Grid>
                             <Grid item xs={6}>
                                 <NewsList />
+                                <Button variant="outlined" color="primary" fullWidth component={Link} to="/news">Ver todas as notícias</Button>
                             </Grid>
                         </Grid>
                     </Container>
                 </section>
 
-                <section className={css.section} style={{ background: 'lightgray' }}>
-                    <Container>
+                <section className={css.section} style={{ background: 'white' }}>
+                    <Container maxWidth="md">
                         <T variant="h4">Entre em Contato</T>
                         <T>Tire suas dúvidas ou dê sua opinião</T>
 
-                        <ContactForm>
+                        <ContactForm fieldProps={{ autoFocus: false }}>
                             {(fields, loading) => <>
                                 {fields}
                                 <Button style={{ marginTop: 10 }} disabled={loading} type="submit" fullWidth size="large" color="primary" variant="contained">Enviar</Button>
