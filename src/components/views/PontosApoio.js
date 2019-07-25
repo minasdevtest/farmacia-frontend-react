@@ -7,26 +7,9 @@ import { withLogin } from '../LoginView';
 import { WithRoles } from '../../lib/authHOC';
 import Loader from 'components/Loader';
 
-const fields = [
-    ['nome', 'Nome do Local', { required: true }],
-    ['rua', 'Rua', { required: true }],
-    ['numero', 'Número', { required: true }],
-    ['complemento', 'Complemento'],
-    ['bairro', 'Bairro', { required: true }],
-    ['cidade', 'Cidade', { required: true }],
-    ['estado', 'Estado', { required: true }],
-    ['cep', 'CEP', { required: true }],
-    ['pnt_referencia', 'Ponto Referencia'],
-    ['hora_Abertura', 'Hora Abertura', { required: true }],
-    ['hora_Fechamento', 'Hora Fechamento', { required: true }],
-    ['latitude', 'Latitude'],
-    ['longitude', 'Longitude'],
-]
-
 class PontosApoio extends Component {
     constructor(props) {
         super(props);
-        this.sdk = FarmaSdk.instance()
         this.state = {
             loading: true,
             items: [],
@@ -34,7 +17,19 @@ class PontosApoio extends Component {
             newItemOpen: false,
             sending: false,
             deleting: false,
+            loadingCep: false,
         }
+    }
+
+    /**
+     * SDK instance
+     *
+     * @readonly
+     * @memberof PontosApoio
+     * @returns {FarmaSdk}
+     */
+    get sdk() {
+        return FarmaSdk.instance()
     }
 
     load = () => {
@@ -78,8 +73,38 @@ class PontosApoio extends Component {
             .then(() => this.setState({ deleting: false }))
     }
 
+    checkCep = () => {
+        const { newItem, cep = '' } = this.state.newItem
+        if (cep.replace(/\D/g, '').length !== 8) return
+        this.setState({ loadingCep: true })
+        this.sdk.locations.getCep(cep)
+            .then(location => this.setState({ newItem: { ...newItem, ...location } }))
+            .catch(() => alert('CEP inválido'))
+            .then(() => this.setState({ loadingCep: false }))
+    }
+
     render() {
-        const { newItemOpen, newItem, items, loading, sending, } = this.state
+        const { loadingCep, newItemOpen, newItem, items, loading, sending, } = this.state
+        const fields = [
+            ['cep', 'CEP',
+                {
+                    required: true, variant: 'outlined', type: 'number', step: '1', onChange:
+                        e => this.setState({ newItem: { ...newItem, cep: e.target.value } }, this.checkCep)
+                }],
+            ['nome', 'Nome do Local', { required: true }],
+            ['rua', 'Rua', { required: true }],
+            ['numero', 'Número', { required: true }],
+            ['complemento', 'Complemento'],
+            ['bairro', 'Bairro', { required: true }],
+            ['cidade', 'Cidade', { required: true }],
+            ['estado', 'Estado', { required: true }],
+            ['pnt_referencia', 'Ponto Referencia'],
+            ['hora_Abertura', 'Hora Abertura', { required: true }],
+            ['hora_Fechamento', 'Hora Fechamento', { required: true }],
+            ['latitude', 'Latitude'],
+            ['longitude', 'Longitude'],
+        ]
+
         return (
             <>
                 <Header title="Pontos de Apoio" backButton />
@@ -166,23 +191,26 @@ class PontosApoio extends Component {
                         <form method="post" onSubmit={this.createItem}>
                             <DialogContent>
                                 <DialogContentText>Preencha os dados abaixo</DialogContentText>
-                                {fields.map(([field, label, args = {}], i) =>
-                                    <TextField
-                                        key={field}
-                                        autoFocus={i === 0}
-                                        margin="dense"
-                                        id={field}
-                                        name={field}
-                                        label={label}
-                                        value={newItem[field] || ''}
-                                        onChange={e => this.setState({ newItem: { ...newItem, [field]: e.target.value } })}
-                                        type="text"
-                                        fullWidth
-                                        {...args
-                                        // { ...args, required: false }
-                                        }
-                                    />
-                                )}
+                                {loadingCep && <Loader />}
+                                <Container>
+                                    {fields.map(([field, label, args = {}], i) =>
+                                        <TextField
+                                            key={field}
+                                            autoFocus={i === 0}
+                                            margin="dense"
+                                            id={field}
+                                            name={field}
+                                            label={label}
+                                            value={newItem[field] || ''}
+                                            onChange={e => this.setState({ newItem: { ...newItem, [field]: e.target.value } })}
+                                            type="text"
+                                            fullWidth
+                                            {...args
+                                            // { ...args, required: false }
+                                            }
+                                        />
+                                    )}
+                                </Container>
                             </DialogContent>
                             <DialogActions>
                                 <Button variant="contained" fullWidth size="large" type="submit" color="primary" disabled={this.sending}>Enviar</Button>

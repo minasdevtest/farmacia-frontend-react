@@ -135,6 +135,11 @@ class MedicinesView extends Component {
         editItemId: item.lote
     })
 
+    updateFilter = filter =>
+        this.state.filter !== filter ?
+            this.setState({ filter, filterOpen: false }, this.fetchItems) :
+            this.setState({ filterOpen: false })
+
     render() {
         const { filterOpen, item, action, requestDetails, newItemOpen, newItem, itemDetails, items, loading, sending, typesOptions, statusOptions, editItemId } = this.state
 
@@ -297,7 +302,7 @@ class MedicinesView extends Component {
                     status={statusOptions}
                     types={typesOptions}
                     open={filterOpen}
-                    onApply={filter => console.warn(filter) || this.setState({ filter, filterOpen: false }, this.fetchItems)} />
+                    onApply={this.updateFilter} />
             </>
         );
     }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Drawer, List, ListItem, ListItemText, ListItemSecondaryAction, Switch, Divider, ListItemIcon, TextField, Toolbar, Typography as T, IconButton, Button, InputAdornment } from '@material-ui/core';
-import { Pets as PetsIcon, Healing as HealingIcon, Category as CategoryIcon, ChevronLeft, Cancel as CancelIcon } from '@material-ui/icons';
+import { Pets as PetsIcon, Healing as HealingIcon, Category as CategoryIcon, ChevronLeft, Cancel as CancelIcon, Person as UserIcon } from '@material-ui/icons';
 import ListItemNested from 'lib/components/ListItemNested';
 import { preventDefault } from 'lib/util';
 import { WithRoles } from 'lib/authHOC';
@@ -48,11 +48,30 @@ export default function MedicineFilter({ initialFilter = {}, onApply, status = [
                             value={idFilter}
                             onChange={e => onChange('lote', e.target.value)}
                             InputProps={{
-                                endAdornment: <InputAdornment position="end">
-                                    <IconButton edge="end" onClick={() => onChange('lote', '')}>
-                                        <CancelIcon />
-                                    </IconButton>
-                                </InputAdornment>
+                                endAdornment:
+                                    <InputAdornment position="end">
+                                        <IconButton edge="end" onClick={() => onChange('lote', '')}>
+                                            <CancelIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                            }}
+                        />
+                    </ListItem>
+                    <Divider />
+
+                    <ListItem component="label">
+                        <TextField
+                            fullWidth
+                            variant="outlined"
+                            placeholder="Nome, email"
+                            InputLabelProps={{ shrink: true }}
+                            label="Usuário reservado"
+                            name="user"
+                            InputProps={{
+                                startAdornment:
+                                    <InputAdornment position="start">
+                                        <UserIcon color="primary" />
+                                    </InputAdornment>
                             }}
                         />
                     </ListItem>

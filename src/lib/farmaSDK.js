@@ -148,8 +148,17 @@ export default class FarmaSdk extends BaseModule {
             .then(items => items.find(item => item.lote === lote))
     }
 
-    sac = {
+    locations = {
+        getCep: (cep = '') => Axios.get(`https://viacep.com.br/ws/${cep.replace(/\D/g, '')}/json/`)
+            .then(res => res.data)
+            .then(data => data.erro ? Promise.reject(data) : data)
+            .then(({ cep, logradouro, complemento, bairro, localidade, uf }) =>
+                ({ cep: cep.replace(/\D/g, ''), rua: logradouro, complemento, bairro, cidade: localidade, estado: uf })
+            )
 
+    }
+
+    sac = {
         get: () => waitPromise().then(() => [
             { id: 1, nomeDoUsuario: 'João da Silva', email: 'joao@example.com', telefone: '12345678', mensagem: 'Como uso o sistema?' },
             { id: 2, nomeDoUsuario: 'Maria Joana', email: 'maria@example.com', telefone: '12345678', mensagem: "Uma história\n\nFim" },

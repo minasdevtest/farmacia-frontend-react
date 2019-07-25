@@ -86,3 +86,17 @@ export function cancellablePromise(promise) {
     ])
     return [newPromise, cancel]
 }
+
+/**
+ * Toggle State Hook
+ *
+ * @export
+ * @param {boolean} [initialState=false]
+ * @returns {[boolean, function]}
+ */
+export function useToggleState(initialState = false) {
+    const [state, setState] = useState(initialState)
+    const toggleState = (value = !state) => setState(value)
+
+    return [state, toggleState]
+}
